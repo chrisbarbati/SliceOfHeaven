@@ -28,25 +28,25 @@ namespace PizzaStore.Models
 
     public class Pizza
     {
-        int Id { get; set; }
+        public int Id { get; set; }
 
 
         [Required()]
         [MaxLength(100)]
-        String Name { get; set; }
+        public String Name { get; set; }
 
         [Required()]
         [Range(0, 30000)] //Unsure how many calories are in an entire pizza, especially one loaded with toppings
-        int Calories { get; set; } // Later, calculate this based on dough, cheese, and toppings
+        public int Calories { get; set; } // Later, calculate this based on dough, cheese, and toppings
 
         [Required()]
-        Dough DoughType { get; set; }
+        public Dough DoughType { get; set; }
 
-        Cheese CheeseType { get; set; } //Not required, as cheese is technically optional
+        public Cheese CheeseType { get; set; } //Not required, as cheese is technically optional
 
         [Required()]
-        Boolean IsVegan { get; set; } //Later, determine this based on dough, cheese, and toppings
+        public Boolean IsVegan { get; set; } //Later, determine this based on dough, cheese, and toppings
 
-        List<Topping>? Toppings { get; set; } //Optional, toppings not required
+        public List<Topping>? Toppings { get; set; } //Optional, toppings not required
     }
 }

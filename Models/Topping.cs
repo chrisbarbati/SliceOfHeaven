@@ -4,27 +4,30 @@ namespace PizzaStore.Models
 {
     /**
      * Class for a Pizza Topping object
+     * 
+     * DB password (not a permanent place to store this)
+     * 
      */
 
     //TODO Add decorators
     public class Topping
     {
-        int Id { get; set; }
+        public int Id { get; set; }
 
         [Required()]
         [MaxLength(100)]
-        String Name { get; set; }
+        public String Name { get; set; }
 
         [Required()]
         [Range(0, 200)]
-        Double Price { get; set; }
+        public Double Price { get; set; }
 
         [Required()]
         [Range(0, 3000)]
-        int Calories { get; set; }
+        public int Calories { get; set; }
 
         [Required()]
         [Display(Name = "Vegan")]
-        Boolean IsVegan { get;  set; }
+        public Boolean IsVegan { get;  set; }
     }
 }
