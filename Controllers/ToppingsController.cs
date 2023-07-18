@@ -6,90 +6,91 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using PizzaStore.Data;
+using PizzaStore.Models;
 
-namespace PizzaStore.Models
+namespace PizzaStore.Controllers
 {
-    public class PizzasController : Controller
+    public class ToppingsController : Controller
     {
         private readonly ApplicationDbContext _context;
 
-        public PizzasController(ApplicationDbContext context)
+        public ToppingsController(ApplicationDbContext context)
         {
             _context = context;
         }
 
-        // GET: Pizzas
+        // GET: Toppings
         public async Task<IActionResult> Index()
         {
-              return _context.Pizzas != null ? 
-                          View(await _context.Pizzas.ToListAsync()) :
-                          Problem("Entity set 'ApplicationDbContext.Pizzas'  is null.");
+            return _context.Toppings != null ?
+                        View(await _context.Toppings.ToListAsync()) :
+                        Problem("Entity set 'ApplicationDbContext.Toppings'  is null.");
         }
 
-        // GET: Pizzas/Details/5
+        // GET: Toppings/Details/5
         public async Task<IActionResult> Details(int? id)
         {
-            if (id == null || _context.Pizzas == null)
+            if (id == null || _context.Toppings == null)
             {
                 return NotFound();
             }
 
-            var pizza = await _context.Pizzas
+            var topping = await _context.Toppings
                 .FirstOrDefaultAsync(m => m.Id == id);
-            if (pizza == null)
+            if (topping == null)
             {
                 return NotFound();
             }
 
-            return View(pizza);
+            return View(topping);
         }
 
-        // GET: Pizzas/Create
+        // GET: Toppings/Create
         public IActionResult Create()
         {
             return View();
         }
 
-        // POST: Pizzas/Create
+        // POST: Toppings/Create
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Name,Calories,DoughType,CheeseType,IsVegan")] Pizza pizza)
+        public async Task<IActionResult> Create([Bind("Id,Name,Price,Calories,IsVegan")] Topping topping)
         {
             if (ModelState.IsValid)
             {
-                _context.Add(pizza);
+                _context.Add(topping);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            return View(pizza);
+            return View(topping);
         }
 
-        // GET: Pizzas/Edit/5
+        // GET: Toppings/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
-            if (id == null || _context.Pizzas == null)
+            if (id == null || _context.Toppings == null)
             {
                 return NotFound();
             }
 
-            var pizza = await _context.Pizzas.FindAsync(id);
-            if (pizza == null)
+            var topping = await _context.Toppings.FindAsync(id);
+            if (topping == null)
             {
                 return NotFound();
             }
-            return View(pizza);
+            return View(topping);
         }
 
-        // POST: Pizzas/Edit/5
+        // POST: Toppings/Edit/5
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Name,Calories,DoughType,CheeseType,IsVegan")] Pizza pizza)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,Name,Price,Calories,IsVegan")] Topping topping)
         {
-            if (id != pizza.Id)
+            if (id != topping.Id)
             {
                 return NotFound();
             }
@@ -98,12 +99,12 @@ namespace PizzaStore.Models
             {
                 try
                 {
-                    _context.Update(pizza);
+                    _context.Update(topping);
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!PizzaExists(pizza.Id))
+                    if (!ToppingExists(topping.Id))
                     {
                         return NotFound();
                     }
@@ -114,49 +115,49 @@ namespace PizzaStore.Models
                 }
                 return RedirectToAction(nameof(Index));
             }
-            return View(pizza);
+            return View(topping);
         }
 
-        // GET: Pizzas/Delete/5
+        // GET: Toppings/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
-            if (id == null || _context.Pizzas == null)
+            if (id == null || _context.Toppings == null)
             {
                 return NotFound();
             }
 
-            var pizza = await _context.Pizzas
+            var topping = await _context.Toppings
                 .FirstOrDefaultAsync(m => m.Id == id);
-            if (pizza == null)
+            if (topping == null)
             {
                 return NotFound();
             }
 
-            return View(pizza);
+            return View(topping);
         }
 
-        // POST: Pizzas/Delete/5
+        // POST: Toppings/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            if (_context.Pizzas == null)
+            if (_context.Toppings == null)
             {
-                return Problem("Entity set 'ApplicationDbContext.Pizzas'  is null.");
+                return Problem("Entity set 'ApplicationDbContext.Toppings'  is null.");
             }
-            var pizza = await _context.Pizzas.FindAsync(id);
-            if (pizza != null)
+            var topping = await _context.Toppings.FindAsync(id);
+            if (topping != null)
             {
-                _context.Pizzas.Remove(pizza);
+                _context.Toppings.Remove(topping);
             }
-            
+
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 
-        private bool PizzaExists(int id)
+        private bool ToppingExists(int id)
         {
-          return (_context.Pizzas?.Any(e => e.Id == id)).GetValueOrDefault();
+            return (_context.Toppings?.Any(e => e.Id == id)).GetValueOrDefault();
         }
     }
 }

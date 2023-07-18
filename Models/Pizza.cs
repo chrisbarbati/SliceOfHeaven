@@ -6,14 +6,18 @@ namespace PizzaStore.Models
     public enum Cheese
     {
         Mozzarella,
-        Goat, //Find a way to make the output nicer so it doesn't appear as "goat" in the dropdown
-        Vegan
+        [Display(Name = "Goat Cheese")]
+        Goat,
+        Vegan,
+        None
     }
 
     public enum Dough
     {
         Regular,
+        [Display(Name = "Thin-Crust")]
         ThinCrust,
+        [Display(Name = "Gluten-Free")]
         NoGluten,
         Vegan
     }
@@ -40,13 +44,17 @@ namespace PizzaStore.Models
         public int Calories { get; set; } // Later, calculate this based on dough, cheese, and toppings
 
         [Required()]
+        [Display(Name = "Dough")]
         public Dough DoughType { get; set; }
 
+        [Required()]
+        [Display(Name = "Cheese")]
         public Cheese CheeseType { get; set; } //Not required, as cheese is technically optional
 
         [Required()]
+        [Display(Name="Vegan")]
         public Boolean IsVegan { get; set; } //Later, determine this based on dough, cheese, and toppings
 
-        public List<Topping>? Toppings { get; set; } //Optional, toppings not required
+        public List<Topping> Toppings { get; set; } //Optional, toppings not required
     }
 }
