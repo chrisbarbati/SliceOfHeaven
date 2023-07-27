@@ -86,6 +86,10 @@ namespace PizzaStore.Data.Migrations
                         .IsConcurrencyToken()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("Discriminator")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("Email")
                         .HasMaxLength(256)
                         .HasColumnType("nvarchar(256)");
@@ -137,6 +141,8 @@ namespace PizzaStore.Data.Migrations
                         .HasFilter("[NormalizedUserName] IS NOT NULL");
 
                     b.ToTable("AspNetUsers", (string)null);
+
+                    b.HasDiscriminator<string>("Discriminator").HasValue("IdentityUser");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserClaim<string>", b =>
@@ -224,6 +230,98 @@ namespace PizzaStore.Data.Migrations
                     b.ToTable("AspNetUserTokens", (string)null);
                 });
 
+            modelBuilder.Entity("PizzaStore.Models.Cart", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<int>("UserId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("UserId1")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("UserId1");
+
+                    b.ToTable("Cart");
+                });
+
+            modelBuilder.Entity("PizzaStore.Models.CartItem", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<int>("CartId")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("PizzaId")
+                        .HasColumnType("int");
+
+                    b.Property<decimal>("Price")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<int>("ProductId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Quantity")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CartId");
+
+                    b.HasIndex("PizzaId");
+
+                    b.ToTable("CartItem");
+                });
+
+            modelBuilder.Entity("PizzaStore.Models.Order", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<int>("CartId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("PaymentMethod")
+                        .HasColumnType("int");
+
+                    b.Property<bool>("PaymentReceived")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("ShippinAddress")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<decimal>("Total")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<int>("UserId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("UserId1")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CartId");
+
+                    b.HasIndex("UserId1");
+
+                    b.ToTable("Order");
+                });
+
             modelBuilder.Entity("PizzaStore.Models.Pizza", b =>
                 {
                     b.Property<int>("Id")
@@ -286,6 +384,13 @@ namespace PizzaStore.Data.Migrations
                     b.ToTable("Toppings");
                 });
 
+            modelBuilder.Entity("PizzaStore.Models.User", b =>
+                {
+                    b.HasBaseType("Microsoft.AspNetCore.Identity.IdentityUser");
+
+                    b.HasDiscriminator().HasValue("User");
+                });
+
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
                 {
                     b.HasOne("Microsoft.AspNetCore.Identity.IdentityRole", null)
@@ -337,6 +442,49 @@ namespace PizzaStore.Data.Migrations
                         .IsRequired();
                 });
 
+            modelBuilder.Entity("PizzaStore.Models.Cart", b =>
+                {
+                    b.HasOne("PizzaStore.Models.User", "User")
+                        .WithMany("Carts")
+                        .HasForeignKey("UserId1");
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("PizzaStore.Models.CartItem", b =>
+                {
+                    b.HasOne("PizzaStore.Models.Cart", "Cart")
+                        .WithMany("CartItems")
+                        .HasForeignKey("CartId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("PizzaStore.Models.Pizza", "Pizza")
+                        .WithMany("CartItems")
+                        .HasForeignKey("PizzaId");
+
+                    b.Navigation("Cart");
+
+                    b.Navigation("Pizza");
+                });
+
+            modelBuilder.Entity("PizzaStore.Models.Order", b =>
+                {
+                    b.HasOne("PizzaStore.Models.Cart", "Cart")
+                        .WithMany()
+                        .HasForeignKey("CartId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("PizzaStore.Models.User", "User")
+                        .WithMany("Orders")
+                        .HasForeignKey("UserId1");
+
+                    b.Navigation("Cart");
+
+                    b.Navigation("User");
+                });
+
             modelBuilder.Entity("PizzaStore.Models.Topping", b =>
                 {
                     b.HasOne("PizzaStore.Models.Pizza", null)
@@ -344,9 +492,23 @@ namespace PizzaStore.Data.Migrations
                         .HasForeignKey("PizzaId");
                 });
 
+            modelBuilder.Entity("PizzaStore.Models.Cart", b =>
+                {
+                    b.Navigation("CartItems");
+                });
+
             modelBuilder.Entity("PizzaStore.Models.Pizza", b =>
                 {
+                    b.Navigation("CartItems");
+
                     b.Navigation("Toppings");
+                });
+
+            modelBuilder.Entity("PizzaStore.Models.User", b =>
+                {
+                    b.Navigation("Carts");
+
+                    b.Navigation("Orders");
                 });
 #pragma warning restore 612, 618
         }

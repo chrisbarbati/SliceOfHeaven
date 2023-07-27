@@ -56,5 +56,7 @@ namespace PizzaStore.Models
         public Boolean IsVegan { get; set; } //Later, determine this based on dough, cheese, and toppings
 
         public List<Topping> Toppings { get; set; } //Optional, toppings not required
+
+        public List<CartItem>? CartItems { get; set; }
     }
 }
