@@ -48,6 +48,12 @@ namespace PizzaStore.Controllers
         // GET: Pizzas/Create
         public IActionResult Create()
         {
+            //Get the data for toppings that are currently stored in the database, and add them to a new List of Toppings
+            List<Topping> Toppings = _context.Toppings.ToList();
+
+            //Add them to a ViewBag
+            ViewBag.Toppings = Toppings;
+
             return View();
         }
 
@@ -56,10 +62,13 @@ namespace PizzaStore.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Name,Calories,DoughType,CheeseType,IsVegan")] Pizza pizza)
+        public async Task<IActionResult> Create([Bind("Id,Name,Calories,DoughType,CheeseType,IsVegan")] Pizza pizza, int[] Toppings)
         {
             if (ModelState.IsValid)
             {
+                // Populate the Toppings list by querying the database for matching Topping IDs
+                pizza.Toppings = _context.Toppings.Where(t => Toppings.Contains(t.Id)).ToList();
+
                 _context.Add(pizza);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));

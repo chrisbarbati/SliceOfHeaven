@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.Drawing;
 
 namespace PizzaStore.Models
 {
@@ -55,8 +56,15 @@ namespace PizzaStore.Models
         [Display(Name="Vegan")]
         public Boolean IsVegan { get; set; } //Later, determine this based on dough, cheese, and toppings
 
-        public List<Topping> Toppings { get; set; } //Optional, toppings not required
+        public List<Topping>? Toppings { get; set; } //Optional, toppings not required
 
         public List<CartItem>? CartItems { get; set; }
+
+        /**
+         *  TODO: Dynamically overlay all of the selected topping images to show 
+         *  a preview of what the pizza would look like
+         */
+        public Image PizzaImage { get; set; } //Way to visualize how the pizza will look while creating it
+        
     }
 }
