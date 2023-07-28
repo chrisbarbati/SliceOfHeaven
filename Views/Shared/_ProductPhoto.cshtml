@@ -1,0 +1,9 @@
+﻿@model PizzaStore.Models.Topping;
+
+@{
+    var photoPath = (Model != null && !string.IsNullOrEmpty(Model.imagePath)) ?
+    "/pizzaImages/" + Model.imagePath:
+    "/basil1.jpg"; //Update placeholder later
+}
+
+<img id="photo-preview" class="topping-thumbnail" src="@photoPath" alt="Product Image" />

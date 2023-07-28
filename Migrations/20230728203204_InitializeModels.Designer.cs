@@ -12,7 +12,7 @@ using PizzaStore.Data;
 namespace PizzaStore.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20230727234525_InitializeModels")]
+    [Migration("20230728203204_InitializeModels")]
     partial class InitializeModels
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -378,6 +378,10 @@ namespace PizzaStore.Migrations
 
                     b.Property<double>("Price")
                         .HasColumnType("float");
+
+                    b.Property<string>("imagePath")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
 

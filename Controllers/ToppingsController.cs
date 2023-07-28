@@ -22,9 +22,9 @@ namespace PizzaStore.Controllers
         // GET: Toppings
         public async Task<IActionResult> Index()
         {
-            return _context.Toppings != null ?
-                        View(await _context.Toppings.ToListAsync()) :
-                        Problem("Entity set 'ApplicationDbContext.Toppings'  is null.");
+              return _context.Toppings != null ? 
+                          View(await _context.Toppings.ToListAsync()) :
+                          Problem("Entity set 'ApplicationDbContext.Toppings'  is null.");
         }
 
         // GET: Toppings/Details/5
@@ -56,7 +56,7 @@ namespace PizzaStore.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Name,Price,Calories,IsVegan")] Topping topping)
+        public async Task<IActionResult> Create([Bind("Id,Name,Price,Calories,IsVegan,imagePath")] Topping topping)
         {
             if (ModelState.IsValid)
             {
@@ -88,7 +88,7 @@ namespace PizzaStore.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Name,Price,Calories,IsVegan")] Topping topping)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,Name,Price,Calories,IsVegan,imagePath")] Topping topping)
         {
             if (id != topping.Id)
             {
@@ -150,14 +150,14 @@ namespace PizzaStore.Controllers
             {
                 _context.Toppings.Remove(topping);
             }
-
+            
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 
         private bool ToppingExists(int id)
         {
-            return (_context.Toppings?.Any(e => e.Id == id)).GetValueOrDefault();
+          return (_context.Toppings?.Any(e => e.Id == id)).GetValueOrDefault();
         }
     }
 }

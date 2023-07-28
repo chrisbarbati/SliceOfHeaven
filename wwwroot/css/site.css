@@ -16,3 +16,8 @@ html {
 body {
   margin-bottom: 60px;
 }
+
+.topping-thumbnail{
+    width: 5em;
+    height: 5em;
+}

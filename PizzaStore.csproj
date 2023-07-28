@@ -19,4 +19,23 @@
     <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="6.0.15" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Migrations\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="wwwroot\pizzaImages\basil1.png" />
+    <None Include="wwwroot\pizzaImages\cheese1.png" />
+    <None Include="wwwroot\pizzaImages\cheeseOptions1.png" />
+    <None Include="wwwroot\pizzaImages\crust1.png" />
+    <None Include="wwwroot\pizzaImages\crust2.png" />
+    <None Include="wwwroot\pizzaImages\mushrooms1.png" />
+    <None Include="wwwroot\pizzaImages\olives1.png" />
+    <None Include="wwwroot\pizzaImages\onions1.png" />
+    <None Include="wwwroot\pizzaImages\peppers1.png" />
+    <None Include="wwwroot\pizzaImages\pineapple1.png" />
+    <None Include="wwwroot\pizzaImages\sauce1.png" />
+    <None Include="wwwroot\pizzaImages\sundriedTomato1.png" />
+  </ItemGroup>
+
 </Project>

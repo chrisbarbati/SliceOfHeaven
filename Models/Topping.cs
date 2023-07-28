@@ -29,5 +29,9 @@ namespace PizzaStore.Models
         [Required()]
         [Display(Name = "Vegan")]
         public Boolean IsVegan { get;  set; }
+
+        [Required()]
+        [Display(Name = "Image Path")]
+        public String imagePath { get; set; }
     }
 }
