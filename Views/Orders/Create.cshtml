@@ -12,23 +12,23 @@
 <div class="row">
     <div class="col-md-4">
         <form asp-action="Create">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div asp-validation-summary="ModelOnly" class="text-danger my-3"></div>
             <div class="form-group">
                 <label asp-for="UserId" class="control-label"></label>
-                <input asp-for="UserId" class="form-control" />
+                <input asp-for="UserId" class="form-control my-3" />
                 <span asp-validation-for="UserId" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="CartId" class="control-label"></label>
-                <select asp-for="CartId" class ="form-control" asp-items="ViewBag.CartId"></select>
+                <select asp-for="CartId" class="form-control my-3" asp-items="ViewBag.CartId"></select>
             </div>
             <div class="form-group">
                 <label asp-for="Total" class="control-label"></label>
-                <input asp-for="Total" class="form-control" />
+                <input asp-for="Total" class="form-control my-3" />
                 <span asp-validation-for="Total" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="ShippinAddress" class="control-label"></label>
+                <label asp-for="ShippinAddress" class="control-label my-3"></label>
                 <input asp-for="ShippinAddress" class="form-control" />
                 <span asp-validation-for="ShippinAddress" class="text-danger"></span>
             </div>
@@ -38,12 +38,12 @@
                 </label>
             </div>
             <div class="form-group">
-                <label asp-for="PaymentMethod" class="control-label"></label>
+                <label asp-for="PaymentMethod" class="control-label my-3"></label>
                 <select asp-for="PaymentMethod" class="form-control"></select>
                 <span asp-validation-for="PaymentMethod" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <input type="submit" value="Create" class="btn btn-primary" />
+                <input type="submit" value="Create" class="btn btn-primary my-3" />
             </div>
         </form>
     </div>

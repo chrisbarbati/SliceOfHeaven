@@ -43,9 +43,9 @@ namespace PizzaStore
             app.UseAuthentication();
             app.UseAuthorization();
 
-            app.MapControllerRoute(
-                name: "default",
-                pattern: "{controller=Home}/{action=Index}/{id?}");
+            //Move all routing tables to separate class and call it
+            MapRoutes.MapRoute(app);
+
             app.MapRazorPages();
 
             app.Run();
