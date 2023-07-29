@@ -13,7 +13,6 @@ namespace PizzaStore.Data
             : base(options)
         {
         }
-
         public DbSet<PizzaStore.Models.Cart>? Cart { get; set; }
 
         public DbSet<PizzaStore.Models.Order>? Order { get; set; }
