@@ -58,6 +58,8 @@ namespace PizzaStore.Models
 
         public List<Topping>? Toppings { get; set; } //Optional, toppings not required
 
+        public List<PizzaTopping> PizzaToppings { get; set; } //Required to make junction table
+
         public List<CartItem>? CartItems { get; set; }
 
         /**
