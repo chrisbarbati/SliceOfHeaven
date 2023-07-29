@@ -64,7 +64,7 @@ namespace PizzaStore.Models
          *  TODO: Dynamically overlay all of the selected topping images to show 
          *  a preview of what the pizza would look like
          */
-        public Image PizzaImage { get; set; } //Way to visualize how the pizza will look while creating it
+        //public Image PizzaImage { get; set; } //Way to visualize how the pizza will look while creating it
         
     }
 }

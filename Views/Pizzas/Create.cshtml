@@ -1,6 +1,7 @@
 ﻿@model PizzaStore.Models.Pizza
 
 @{
+    
     ViewData["Title"] = "Create";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
@@ -39,7 +40,7 @@
                 @foreach (var topping in ViewBag.Toppings)
                 {
                     <div>
-                        <input type="checkbox" name="tToppings" value="@topping.Id" />
+                        <input type="checkbox" name="Toppings" value="@topping.Id" />
                         <label>@topping.Name</label>
                     </div>
                 }
@@ -53,6 +54,10 @@
                 <input type="submit" value="Create" class="btn btn-primary" />
             </div>
         </form>
+    </div>
+    <div>
+        <!-- Display the Pizza Preview Image here -->
+        
     </div>
 </div>
 
