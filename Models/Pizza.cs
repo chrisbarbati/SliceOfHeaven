@@ -58,6 +58,8 @@ namespace PizzaStore.Models
 
         public List<Topping>? Toppings { get; set; } //Optional, toppings not required
 
+        public List<PizzaAssociation>? PizzaAssociations { get; set; }
+
         public List<CartItem>? CartItems { get; set; }
 
         /**

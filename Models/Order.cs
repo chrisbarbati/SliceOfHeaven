@@ -21,7 +21,7 @@ namespace PizzaStore.Models
 
         public decimal Total { get; set; }
 
-        public string ShippinAddress { get; set; }
+        public string ShippingAddress { get; set; }
 
         public bool PaymentReceived { get; set; }
 

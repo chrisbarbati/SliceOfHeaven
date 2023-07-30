@@ -28,7 +28,6 @@ namespace PizzaStore.Migrations
                 columns: table => new
                 {
                     Id = table.Column<string>(type: "nvarchar(450)", nullable: false),
-                    Discriminator = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     UserName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
                     NormalizedUserName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
                     Email = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
@@ -215,7 +214,7 @@ namespace PizzaStore.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "CartItem",
+                name: "CartItems",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
@@ -228,15 +227,15 @@ namespace PizzaStore.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_CartItem", x => x.Id);
+                    table.PrimaryKey("PK_CartItems", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_CartItem_Cart_CartId",
+                        name: "FK_CartItems_Cart_CartId",
                         column: x => x.CartId,
                         principalTable: "Cart",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_CartItem_Pizzas_PizzaId",
+                        name: "FK_CartItems_Pizzas_PizzaId",
                         column: x => x.PizzaId,
                         principalTable: "Pizzas",
                         principalColumn: "Id");
@@ -251,7 +250,7 @@ namespace PizzaStore.Migrations
                     UserId = table.Column<int>(type: "int", nullable: false),
                     CartId = table.Column<int>(type: "int", nullable: false),
                     Total = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
-                    ShippinAddress = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    ShippingAddress = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     PaymentReceived = table.Column<bool>(type: "bit", nullable: false),
                     PaymentMethod = table.Column<int>(type: "int", nullable: false),
                     UserId1 = table.Column<string>(type: "nvarchar(450)", nullable: true)
@@ -268,6 +267,30 @@ namespace PizzaStore.Migrations
                         name: "FK_Order_Cart_CartId",
                         column: x => x.CartId,
                         principalTable: "Cart",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "pizzaAssociations",
+                columns: table => new
+                {
+                    PizzaId = table.Column<int>(type: "int", nullable: false),
+                    ToppingId = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_pizzaAssociations", x => new { x.PizzaId, x.ToppingId });
+                    table.ForeignKey(
+                        name: "FK_pizzaAssociations_Pizzas_PizzaId",
+                        column: x => x.PizzaId,
+                        principalTable: "Pizzas",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_pizzaAssociations_Toppings_ToppingId",
+                        column: x => x.ToppingId,
+                        principalTable: "Toppings",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -317,13 +340,13 @@ namespace PizzaStore.Migrations
                 column: "UserId1");
 
             migrationBuilder.CreateIndex(
-                name: "IX_CartItem_CartId",
-                table: "CartItem",
+                name: "IX_CartItems_CartId",
+                table: "CartItems",
                 column: "CartId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_CartItem_PizzaId",
-                table: "CartItem",
+                name: "IX_CartItems_PizzaId",
+                table: "CartItems",
                 column: "PizzaId");
 
             migrationBuilder.CreateIndex(
@@ -335,6 +358,11 @@ namespace PizzaStore.Migrations
                 name: "IX_Order_UserId1",
                 table: "Order",
                 column: "UserId1");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_pizzaAssociations_ToppingId",
+                table: "pizzaAssociations",
+                column: "ToppingId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Toppings_PizzaId",
@@ -360,13 +388,13 @@ namespace PizzaStore.Migrations
                 name: "AspNetUserTokens");
 
             migrationBuilder.DropTable(
-                name: "CartItem");
+                name: "CartItems");
 
             migrationBuilder.DropTable(
                 name: "Order");
 
             migrationBuilder.DropTable(
-                name: "Toppings");
+                name: "pizzaAssociations");
 
             migrationBuilder.DropTable(
                 name: "AspNetRoles");
@@ -375,10 +403,13 @@ namespace PizzaStore.Migrations
                 name: "Cart");
 
             migrationBuilder.DropTable(
-                name: "Pizzas");
+                name: "Toppings");
 
             migrationBuilder.DropTable(
                 name: "AspNetUsers");
+
+            migrationBuilder.DropTable(
+                name: "Pizzas");
         }
     }
 }

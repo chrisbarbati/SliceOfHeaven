@@ -1,4 +1,4 @@
-﻿@model PizzaStore.Models.Cart
+﻿@model PizzaStore.Models.PizzaAssociation
 
 @{
     ViewData["Title"] = "Edit";
@@ -7,18 +7,14 @@
 
 <h1>Edit</h1>
 
-<h4>Cart</h4>
+<h4>PizzaAssociation</h4>
 <hr />
 <div class="row">
     <div class="col-md-4">
         <form asp-action="Edit">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <input type="hidden" asp-for="Id" />
-            <div class="form-group">
-                <label asp-for="UserId" class="control-label"></label>
-                <input asp-for="UserId" class="form-control" />
-                <span asp-validation-for="UserId" class="text-danger"></span>
-            </div>
+            <input type="hidden" asp-for="PizzaId" />
+            <input type="hidden" asp-for="ToppingId" />
             <div class="form-group">
                 <input type="submit" value="Save" class="btn btn-primary" />
             </div>

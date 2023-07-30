@@ -57,7 +57,7 @@ namespace PizzaStore.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,UserId,CartId,Total,ShippinAddress,PaymentReceived,PaymentMethod")] Order order)
+        public async Task<IActionResult> Create([Bind("Id,UserId,CartId,Total,ShippingAddress,PaymentReceived,PaymentMethod")] Order order)
         {
             if (ModelState.IsValid)
             {
@@ -91,7 +91,7 @@ namespace PizzaStore.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,UserId,CartId,Total,ShippinAddress,PaymentReceived,PaymentMethod")] Order order)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,UserId,CartId,Total,ShippingAddress,PaymentReceived,PaymentMethod")] Order order)
         {
             if (id != order.Id)
             {
