@@ -23,7 +23,7 @@
             foreach (Topping toppingOption in ViewBag.AvailableToppings)
             {
                 <div>
-                            @Html.HiddenFor(pizzaAssociation => pizzaAssociation.PizzaId) <!-- Hidden field to bind PizzaId -->
+                    @Html.HiddenFor(pizzaAssociation => pizzaAssociation.PizzaId) <!-- Hidden field to bind PizzaId -->
                     <input type="checkbox" name="selectedToppingIDs" value="@toppingOption.Id" /> <!-- Results in an array of integers, each of which is a toppingID -->
                 <label>@toppingOption.Name</label>
             </div>
