@@ -17,9 +17,18 @@
                 <label asp-for="PizzaId" class="control-label"></label>
                 <select asp-for="PizzaId" class ="form-control" asp-items="ViewBag.PizzaId"></select>
             </div>
+
             <div class="form-group">
-                <label asp-for="ToppingId" class="control-label"></label>
-                <select asp-for="ToppingId" class ="form-control" asp-items="ViewBag.ToppingId"></select>
+            @{
+            foreach (Topping toppingOption in ViewBag.AvailableToppings)
+            {
+                <div>
+                            @Html.HiddenFor(pizzaAssociation => pizzaAssociation.PizzaId) <!-- Hidden field to bind PizzaId -->
+                    <input type="checkbox" name="selectedToppingIDs" value="@toppingOption.Id" /> <!-- Results in an array of integers, each of which is a toppingID -->
+                <label>@toppingOption.Name</label>
+            </div>
+            }
+            }
             </div>
             <div class="form-group">
                 <input type="submit" value="Create" class="btn btn-primary" />

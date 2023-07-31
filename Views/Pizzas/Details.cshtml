@@ -41,6 +41,23 @@
         <dd class = "col-sm-10">
             @Html.DisplayFor(model => model.IsVegan)
         </dd>
+        <dt class="col-sm-2">
+            Selected Toppings:
+        </dt>
+        <dd class="col-sm-10">
+            <ul>
+                @{
+                    foreach (PizzaAssociation pizzaAssociation in ViewBag.PizzaAssociations) {
+                        foreach (Topping topping in ViewBag.Toppings) {
+                            if (topping.Id == pizzaAssociation.ToppingId)
+                            {
+                                <li>@topping.Name</li>
+                            }
+                    }
+                }
+                }
+            </ul>
+        </dd>
     </dl>
 </div>
 <div>

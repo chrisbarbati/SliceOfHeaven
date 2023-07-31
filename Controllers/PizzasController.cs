@@ -30,6 +30,9 @@ namespace PizzaStore.Controllers
         // GET: Pizzas/Details/5
         public async Task<IActionResult> Details(int? id)
         {
+            ViewBag.PizzaAssociations = _context.pizzaAssociations.ToList().Where(p => p.PizzaId == id).ToList();
+            ViewBag.Toppings = _context.Toppings.ToList();
+
             if (id == null || _context.Pizzas == null)
             {
                 return NotFound();

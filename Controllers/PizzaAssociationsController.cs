@@ -49,6 +49,8 @@ namespace PizzaStore.Controllers
         // GET: PizzaAssociations/Create
         public IActionResult Create()
         {
+            ViewBag.AvailableToppings = _context.Toppings.ToList();
+
             ViewData["PizzaId"] = new SelectList(_context.Pizzas, "Id", "Name");
             ViewData["ToppingId"] = new SelectList(_context.Toppings, "Id", "Name");
             return View();
@@ -59,31 +61,35 @@ namespace PizzaStore.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("PizzaId,ToppingId")] PizzaAssociation pizzaAssociation)
+        public async Task<IActionResult> Create([Bind("PizzaId,ToppingId")] PizzaAssociation pizzaAssociation, int[] selectedToppingIDs)
         {
-            //When making a new PizzaAssociation, iterate over all pizzas in database
-            foreach(Pizza pizza in _context.Pizzas.ToList<Pizza>())
+            
+            foreach(int selectedToppingID in selectedToppingIDs)
             {
-                //Wherever the ID of this pizzaAssociation.PizzaID matches the ID of a pizza
-                if(pizza.Id == pizzaAssociation.PizzaId)
-                {
-                    //If current pizza.PizzaAssociations is null, initialize it
-                    if(pizza.PizzaAssociations == null)
-                    {
-                        pizza.PizzaAssociations = new List<PizzaAssociation>();
-                    }
-
-                    //Add this PizzaAssociation to the list so we can iterate later.
-                    pizza.PizzaAssociations.Add(pizzaAssociation);
-                }
+                System.Diagnostics.Debug.WriteLine(selectedToppingID);
             }
+            
 
             if (ModelState.IsValid)
             {
-                _context.Add(pizzaAssociation);
-                await _context.SaveChangesAsync();
+                foreach(int selectedToppingID in selectedToppingIDs)
+                {
+                    PizzaAssociation PA = new PizzaAssociation { 
+                        PizzaId = pizzaAssociation.PizzaId, 
+                        ToppingId = selectedToppingID, 
+                        //We can use .First() here, as pizza and topping Ids are unique
+                        //Not actually sure if this is necessary, but implemented it when trying to fix
+                        //a different issue. Leaving it for now
+                        Pizza = _context.Pizzas.First(p => p.Id == pizzaAssociation.PizzaId), 
+                        Topping = _context.Toppings.First(t => t.Id == selectedToppingID)
+                    };
+                    
+                    _context.Add(PA);
+                    await _context.SaveChangesAsync();
+                }
                 return RedirectToAction(nameof(Index));
             }
+
             ViewData["PizzaId"] = new SelectList(_context.Pizzas, "Id", "Name", pizzaAssociation.PizzaId);
             ViewData["ToppingId"] = new SelectList(_context.Toppings, "Id", "Name", pizzaAssociation.ToppingId);
             return View(pizzaAssociation);
@@ -156,6 +162,7 @@ namespace PizzaStore.Controllers
                 .Include(p => p.Pizza)
                 .Include(p => p.Topping)
                 .FirstOrDefaultAsync(m => m.PizzaId == id);
+
             if (pizzaAssociation == null)
             {
                 return NotFound();

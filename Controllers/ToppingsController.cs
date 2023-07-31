@@ -22,6 +22,9 @@ namespace PizzaStore.Controllers
         // GET: Toppings
         public async Task<IActionResult> Index()
         {
+
+            ViewBag.PizzaAssociations = _context.pizzaAssociations.ToList<PizzaAssociation>();
+
               return _context.Toppings != null ? 
                           View(await _context.Toppings.ToListAsync()) :
                           Problem("Entity set 'ApplicationDbContext.Toppings'  is null.");
