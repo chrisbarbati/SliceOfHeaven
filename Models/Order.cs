@@ -15,7 +15,7 @@ namespace PizzaStore.Models
     {
         public int Id { get; set; }
 
-        public int UserId { get; set; }
+        public String UserId { get; set; }
 
         public int CartId { get; set; }
 

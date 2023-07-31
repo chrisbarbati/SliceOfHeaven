@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace PizzaStore.Migrations
 {
-    public partial class InitializeModels : Migration
+    public partial class InitializeAgain : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -177,17 +177,17 @@ namespace PizzaStore.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    UserId = table.Column<int>(type: "int", nullable: false),
-                    UserId1 = table.Column<string>(type: "nvarchar(450)", nullable: true)
+                    UserId = table.Column<string>(type: "nvarchar(450)", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Cart", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Cart_AspNetUsers_UserId1",
-                        column: x => x.UserId1,
+                        name: "FK_Cart_AspNetUsers_UserId",
+                        column: x => x.UserId,
                         principalTable: "AspNetUsers",
-                        principalColumn: "Id");
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -233,7 +233,7 @@ namespace PizzaStore.Migrations
                         column: x => x.CartId,
                         principalTable: "Cart",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
                         name: "FK_CartItems_Pizzas_PizzaId",
                         column: x => x.PizzaId,
@@ -247,28 +247,34 @@ namespace PizzaStore.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    UserId = table.Column<int>(type: "int", nullable: false),
+                    UserId = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     CartId = table.Column<int>(type: "int", nullable: false),
                     Total = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
                     ShippingAddress = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     PaymentReceived = table.Column<bool>(type: "bit", nullable: false),
                     PaymentMethod = table.Column<int>(type: "int", nullable: false),
-                    UserId1 = table.Column<string>(type: "nvarchar(450)", nullable: true)
+                    CartId1 = table.Column<int>(type: "int", nullable: true)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Order", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Order_AspNetUsers_UserId1",
-                        column: x => x.UserId1,
+                        name: "FK_Order_AspNetUsers_UserId",
+                        column: x => x.UserId,
                         principalTable: "AspNetUsers",
-                        principalColumn: "Id");
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_Order_Cart_CartId",
                         column: x => x.CartId,
                         principalTable: "Cart",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_Order_Cart_CartId1",
+                        column: x => x.CartId1,
+                        principalTable: "Cart",
+                        principalColumn: "Id");
                 });
 
             migrationBuilder.CreateTable(
@@ -335,9 +341,9 @@ namespace PizzaStore.Migrations
                 filter: "[NormalizedUserName] IS NOT NULL");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Cart_UserId1",
+                name: "IX_Cart_UserId",
                 table: "Cart",
-                column: "UserId1");
+                column: "UserId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_CartItems_CartId",
@@ -355,9 +361,16 @@ namespace PizzaStore.Migrations
                 column: "CartId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Order_UserId1",
+                name: "IX_Order_CartId1",
                 table: "Order",
-                column: "UserId1");
+                column: "CartId1",
+                unique: true,
+                filter: "[CartId1] IS NOT NULL");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Order_UserId",
+                table: "Order",
+                column: "UserId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_pizzaAssociations_ToppingId",

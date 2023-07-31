@@ -167,15 +167,13 @@ namespace PizzaStore.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
-                    b.Property<int>("UserId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("UserId1")
+                    b.Property<string>("UserId")
+                        .IsRequired()
                         .HasColumnType("nvarchar(450)");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("UserId1");
+                    b.HasIndex("UserId");
 
                     b.ToTable("Cart");
                 });
@@ -223,6 +221,9 @@ namespace PizzaStore.Migrations
                     b.Property<int>("CartId")
                         .HasColumnType("int");
 
+                    b.Property<int?>("CartId1")
+                        .HasColumnType("int");
+
                     b.Property<int>("PaymentMethod")
                         .HasColumnType("int");
 
@@ -236,17 +237,19 @@ namespace PizzaStore.Migrations
                     b.Property<decimal>("Total")
                         .HasColumnType("decimal(18,2)");
 
-                    b.Property<int>("UserId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("UserId1")
+                    b.Property<string>("UserId")
+                        .IsRequired()
                         .HasColumnType("nvarchar(450)");
 
                     b.HasKey("Id");
 
                     b.HasIndex("CartId");
 
-                    b.HasIndex("UserId1");
+                    b.HasIndex("CartId1")
+                        .IsUnique()
+                        .HasFilter("[CartId1] IS NOT NULL");
+
+                    b.HasIndex("UserId");
 
                     b.ToTable("Order");
                 });
@@ -452,7 +455,9 @@ namespace PizzaStore.Migrations
                 {
                     b.HasOne("PizzaStore.Models.User", "User")
                         .WithMany("Carts")
-                        .HasForeignKey("UserId1");
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("User");
                 });
@@ -462,7 +467,7 @@ namespace PizzaStore.Migrations
                     b.HasOne("PizzaStore.Models.Cart", "Cart")
                         .WithMany("CartItems")
                         .HasForeignKey("CartId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.HasOne("PizzaStore.Models.Pizza", "Pizza")
@@ -479,12 +484,18 @@ namespace PizzaStore.Migrations
                     b.HasOne("PizzaStore.Models.Cart", "Cart")
                         .WithMany()
                         .HasForeignKey("CartId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
+
+                    b.HasOne("PizzaStore.Models.Cart", null)
+                        .WithOne("Order")
+                        .HasForeignKey("PizzaStore.Models.Order", "CartId1");
 
                     b.HasOne("PizzaStore.Models.User", "User")
                         .WithMany("Orders")
-                        .HasForeignKey("UserId1");
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("Cart");
 
@@ -520,6 +531,8 @@ namespace PizzaStore.Migrations
             modelBuilder.Entity("PizzaStore.Models.Cart", b =>
                 {
                     b.Navigation("CartItems");
+
+                    b.Navigation("Order");
                 });
 
             modelBuilder.Entity("PizzaStore.Models.Pizza", b =>
