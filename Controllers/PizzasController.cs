@@ -59,7 +59,7 @@ namespace PizzaStore.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Name,Calories,DoughType,CheeseType,IsVegan")] Pizza pizza)
+        public async Task<IActionResult> Create([Bind("Id,Name,Calories,DoughType,CheeseType,IsVegan,ImagePath")] Pizza pizza)
         {
             if (ModelState.IsValid)
             {
@@ -91,7 +91,7 @@ namespace PizzaStore.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Name,Calories,DoughType,CheeseType,IsVegan")] Pizza pizza)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,Name,Calories,DoughType,CheeseType,IsVegan,ImagePath")] Pizza pizza)
         {
             if (id != pizza.Id)
             {

@@ -56,6 +56,8 @@ namespace PizzaStore.Models
         [Display(Name="Vegan")]
         public Boolean IsVegan { get; set; } //Later, determine this based on dough, cheese, and toppings
 
+        public String ImagePath { get; set; }
+        
         public List<Topping>? Toppings { get; set; } //Optional, toppings not required
 
         public List<PizzaAssociation>? PizzaAssociations { get; set; }

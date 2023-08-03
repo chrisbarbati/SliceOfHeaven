@@ -47,7 +47,7 @@
                 @Html.DisplayFor(modelItem => item.IsVegan)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.imagePath)
+                <partial name="_ToppingPhoto" model="item" />
             </td>
             <td>
                 <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
