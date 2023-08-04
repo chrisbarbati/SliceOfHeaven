@@ -65,7 +65,7 @@ namespace PizzaStore.Controllers
             {
                 _context.Add(pizza);
                 await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+                return RedirectToAction("Create", "PizzaAssociations");
             }
             return View(pizza);
         }

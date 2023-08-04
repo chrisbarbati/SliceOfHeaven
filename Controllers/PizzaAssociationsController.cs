@@ -61,10 +61,12 @@ namespace PizzaStore.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("PizzaId,ToppingId")] PizzaAssociation pizzaAssociation, int[] selectedToppingIDs)
+        public async Task<IActionResult> Create([Bind("ToppingId")] PizzaAssociation pizzaAssociation, int[] selectedToppingIDs)
         {
-            
-            foreach(int selectedToppingID in selectedToppingIDs)
+            //PizzaId,
+            pizzaAssociation.PizzaId = _context.Pizzas.OrderBy(p => p.Id).Last().Id;
+
+            foreach (int selectedToppingID in selectedToppingIDs)
             {
                 System.Diagnostics.Debug.WriteLine(selectedToppingID);
             }
