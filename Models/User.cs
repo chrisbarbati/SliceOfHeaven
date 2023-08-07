@@ -9,7 +9,9 @@ namespace PizzaStore.Models
          *  Username: chris.barbati@gmail.com
          *  password: Password1!
          *  
-         *  
+         *  Admin Info:
+         *  Username: admin@admin.ca
+         *  password: Password1!
          */
 
         public List<Order>? Orders { get; set; }

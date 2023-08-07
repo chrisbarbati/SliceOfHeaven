@@ -1,5 +1,5 @@
-﻿<nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light border-bottom box-shadow mb-3">
-    <!--  bg-white -->
+﻿<nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light box-shadow mb-3">
+    <!--  bg-white  border-bottom -->
     <div class="container-fluid">
         <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">Slice Of Heaven</a>
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
@@ -10,8 +10,24 @@
             <ul class="navbar-nav flex-grow-1">
                 @foreach (var menuItem in Model)
                 {
+                    if (menuItem.Authorized && !User.Identity.IsAuthenticated)
+                    {
+                        continue;
+                    }
+                    /*
+                    Ask Shaun how to fix this
+
+                    if (User.Identity.IsAuthenticated && menuItem.AllowedRoles != null && menuItem.AllowedRoles.Count > 0)
+                    {
+                        if(menuItem.AllowedRoles.Find(role => User.IsInRole(role)) == null)
+                        {
+                            continue;
+                        }
+                    }
+                    */
                     if (menuItem.DropdownItems != null)//Left off 1:05, https://www.youtube.com/watch?v=deemJZyuadI
                     {
+                        
                         <li class="nav-item dropdown">
                             <a class="nav-link dropdown-toggle" href=# id="navBarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                                 @menuItem.Label
@@ -20,6 +36,22 @@
                             <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
                                 @foreach (var dropdownItem in menuItem.DropdownItems)
                                 {
+                                    if (menuItem.Authorized && !User.Identity.IsAuthenticated)
+                                    {
+                                        continue;
+                                    }
+                                        /*
+                                        Ask Shaun how to fix this
+
+                                    if (User.Identity.IsAuthenticated && menuItem.AllowedRoles != null && menuItem.AllowedRoles.Count > 0)
+                                    {
+                                        if (menuItem.AllowedRoles.Find(role => User.IsInRole(role)) == null)
+                                        {
+                                            continue;
+                                        }
+                                    }
+
+                                    */
                                     <li>
                                         <a class="dropdown-item" asp-controller="@dropdownItem.Controller" asp-action="@dropdownItem.Action">
                                             @dropdownItem.Label
