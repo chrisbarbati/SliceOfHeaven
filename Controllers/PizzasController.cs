@@ -59,10 +59,46 @@ namespace PizzaStore.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Name,Calories,DoughType,CheeseType,IsVegan,ImagePath")] Pizza pizza)
+        public async Task<IActionResult> Create([Bind("Id,Name,DoughType,CheeseType")] Pizza pizza)
         {
             if (ModelState.IsValid)
-            {
+            { //,IsVegan,ImagePath, Calories,
+
+                if(pizza.Name == null) //Set a default name if the user chooses not to add one
+                {
+                    pizza.Name = "Your pizza";
+                }
+
+
+                if(pizza.DoughType == Dough.Vegan && pizza.CheeseType == Cheese.Vegan)
+                {
+                    pizza.IsVegan = true; //Set whether the base pizza is vegan or not.
+                }
+                else
+                {
+                    pizza.IsVegan = false; //Toppings will also affect this
+                }
+
+                if (pizza.CheeseType == Cheese.None)
+                { //Pizza has 600 calories from dough alone
+                    pizza.Calories = 600;
+                }
+                else
+                { //Or 1000 when cheese is added
+                    pizza.Calories = 1000;
+                }
+
+                if (pizza.DoughType == Dough.NoGluten)
+                {//Gluten-free pizza has a different crust
+                    pizza.IsGlutenFree = true;
+                    pizza.ImagePath = "crust2.png";
+                }
+                else
+                {//All other pizzas have crust1
+                    pizza.IsGlutenFree = false;
+                    pizza.ImagePath = "crust1.png";
+                }
+
                 _context.Add(pizza);
                 await _context.SaveChangesAsync();
                 return RedirectToAction("Create", "PizzaAssociations");

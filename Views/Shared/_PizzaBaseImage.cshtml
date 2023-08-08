@@ -1,0 +1,61 @@
+﻿@model PizzaStore.Models.Pizza;
+@using PizzaStore.Models;
+@using PizzaStore.Data;
+@using System.Drawing;
+@using System.Drawing.Imaging;
+
+@{
+    //Dynamically update an image of a pizza (to be used to select crust and cheese)
+
+    var photoPath = (Model != null && !string.IsNullOrEmpty(Model.ImagePath)) ?
+    "wwwroot/pizzaImages/" + Model.ImagePath:
+    "/basil1.png"; //Update placeholder later
+
+    //Image starts with crust
+    Image CompletedPizza = Image.FromFile(photoPath);
+
+
+    /*
+    * Accessing this directly in the view is a violation of convention.
+    * 
+    * Maybe clean this up later if time permits
+    * 
+    * */
+
+    ApplicationDbContext _context = ViewBag.Context;
+
+    List<PizzaAssociation> PizzaAssociations = _context.pizzaAssociations.ToList().Where(p => p.PizzaId == Model.Id).ToList();
+
+    //Get all of the topping IDs associated with this Pizza, and store them in a List
+    List<int> toppingIds = new List<int>();
+
+    foreach(PizzaAssociation pa in PizzaAssociations)
+    {
+        toppingIds.Add(pa.ToppingId);
+    }
+
+    //Get all the toppings that match these IDs and store them in a new List
+    List<Topping> Toppings = _context.Toppings.ToList().Where(t => toppingIds.Contains(t.Id)).ToList();
+
+    Image img = new Bitmap(CompletedPizza.Width, CompletedPizza.Height);
+
+    using (Graphics gr = Graphics.FromImage(img))
+    {
+        gr.DrawImage(CompletedPizza, new System.Drawing.Rectangle(0, 0, CompletedPizza.Width, CompletedPizza.Height));
+
+        foreach (Topping t in Toppings)
+        {
+            gr.DrawImage(Image.FromFile("wwwroot/pizzaImages/" + t.imagePath),
+            new System.Drawing.Rectangle(0, 0, CompletedPizza.Width, CompletedPizza.Height));
+
+        }
+    }
+
+    String outputPath = "wwwroot/temp/output.png";
+
+    img.Save(outputPath, ImageFormat.Png);
+}
+
+
+
+<img id="photo-preview" class="pizzaPreview" src="../../temp/output.png" alt="Product Image" />

@@ -1,61 +1,43 @@
 ﻿@model PizzaStore.Models.Pizza
 
 @{
-    ViewData["Title"] = "Create";
+    ViewData["Title"] = "Index";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h1>Create your perfect pizza!</h1>
+<h1>Index</h1>
 
-<h4>First, select your dough and cheese:</h4>
-<h6>(You can also think of a cool name for your Pizza. Get Creative!)</h6>
+<h4>Pizza</h4>
 <hr />
 <div class="row">
     <div class="col-md-4">
-        <form asp-action="Create">
+        <form asp-action="Index">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <div class="form-group my-4">
+            <div class="form-group">
                 <label asp-for="Name" class="control-label"></label>
                 <input asp-for="Name" class="form-control" />
                 <span asp-validation-for="Name" class="text-danger"></span>
             </div>
-            <!--
             <div class="form-group">
-                <label asp-for="Calories" class="control-label"></label>
-                <input asp-for="Calories" class="form-control" />
-                <span asp-validation-for="Calories" class="text-danger"></span>
-            </div>
-            -->
-            <div class="form-group my-4">
                 <label asp-for="DoughType" class="control-label"></label>
-                <select asp-for="DoughType" class="form-control" asp-items="Html.GetEnumSelectList<Dough>()"></select>
+                <select asp-for="DoughType" class="form-control"></select>
                 <span asp-validation-for="DoughType" class="text-danger"></span>
             </div>
-            <div class="form-group my-4">
+            <div class="form-group">
                 <label asp-for="CheeseType" class="control-label"></label>
-                <select asp-for="CheeseType" class="form-control" asp-items="Html.GetEnumSelectList<Cheese>()"></select>
+                <select asp-for="CheeseType" class="form-control"></select>
                 <span asp-validation-for="CheeseType" class="text-danger"></span>
             </div>
-            <!--
             <div class="form-group form-check">
                 <label class="form-check-label">
                     <input class="form-check-input" asp-for="IsVegan" /> @Html.DisplayNameFor(model => model.IsVegan)
                 </label>
             </div>
-            -->
-            <!--
             <div class="form-group">
-                <label asp-for="ImagePath" class="control-label"></label>
-                <input asp-for="ImagePath" class="form-control" />
-                <span asp-validation-for="ImagePath" class="text-danger"></span>
-            </div>
-            -->
-            <div class="form-group my-4">
                 <input type="submit" value="Create" class="btn btn-primary" />
             </div>
         </form>
     </div>
-    <partial ></partial>
 </div>
 
 <div>

@@ -33,16 +33,14 @@ namespace PizzaStore.Models
 
     public class Pizza
     {
+        [Required()]
         public int Id { get; set; }
 
-
-        [Required()]
         [MaxLength(100)]
         public String Name { get; set; }
 
-        [Required()]
         [Range(0, 30000)] //Unsure how many calories are in an entire pizza, especially one loaded with toppings
-        public int Calories { get; set; } // Later, calculate this based on dough, cheese, and toppings
+        public int? Calories { get; set; } // Later, calculate this based on dough, cheese, and toppings
 
         [Required()]
         [Display(Name = "Dough")]
@@ -50,13 +48,15 @@ namespace PizzaStore.Models
 
         [Required()]
         [Display(Name = "Cheese")]
-        public Cheese CheeseType { get; set; } //Not required, as cheese is technically optional
+        public Cheese CheeseType { get; set; }
 
-        [Required()]
         [Display(Name="Vegan")]
-        public Boolean IsVegan { get; set; } //Later, determine this based on dough, cheese, and toppings
+        public Boolean? IsVegan { get; set; } //Later, determine this based on dough, cheese, and toppings
 
-        public String ImagePath { get; set; }
+        [Display(Name="Gluten-Free")]
+        public Boolean? IsGlutenFree { get; set; } //Determined based on dough and toppings
+
+        public String? ImagePath { get; set; } //Not really optional, but not added by customer, so we need it to be nullable
         
         public List<Topping>? Toppings { get; set; } //Optional, toppings not required
 
