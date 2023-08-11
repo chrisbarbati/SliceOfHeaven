@@ -53,6 +53,19 @@ namespace PizzaStore.Controllers
         public IActionResult Create()
         {
             ViewBag.AvailableToppings = _context.Toppings.ToList();
+            Pizza currentPizza = _context.Pizzas.OrderBy(p => p.Id).LastOrDefault();
+            ViewBag.CurrentPizza = currentPizza;
+
+            List<PizzaAssociation> relevantAssociations = _context.pizzaAssociations.Where(p => p.PizzaId == currentPizza.Id).ToList();
+
+            List<Topping> currentlySelectedToppings = new List<Topping>();
+
+            foreach(PizzaAssociation pa in relevantAssociations)
+            {
+                currentlySelectedToppings.Add(_context.Toppings.FirstOrDefault(t => t.Id == pa.ToppingId));
+            }
+
+            ViewBag.SelectedToppings = currentlySelectedToppings;
 
             ViewData["PizzaId"] = new SelectList(_context.Pizzas, "Id", "Name");
             ViewData["ToppingId"] = new SelectList(_context.Toppings, "Id", "Name");
@@ -66,33 +79,77 @@ namespace PizzaStore.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("ToppingId")] PizzaAssociation pizzaAssociation, int[] selectedToppingIDs)
         {
-            //PizzaId,
+
             pizzaAssociation.PizzaId = _context.Pizzas.OrderBy(p => p.Id).Last().Id;
 
+            System.Diagnostics.Debug.WriteLine("Available Toppings: ");
+            foreach (Topping topping in await _context.Toppings.ToListAsync())
+            {
+                System.Diagnostics.Debug.WriteLine(topping.Id);
+            }
+
+            System.Diagnostics.Debug.WriteLine("Selected Toppings: ");
             foreach (int selectedToppingID in selectedToppingIDs)
             {
                 System.Diagnostics.Debug.WriteLine(selectedToppingID);
             }
-            
 
             if (ModelState.IsValid)
             {
-                foreach(int selectedToppingID in selectedToppingIDs)
+                List<Topping> toppingsToRemove = _context.Toppings.ToList();
+
+                List<int> toppingIdsToRemove = new List<int>();
+
+                foreach (Topping t in toppingsToRemove)
                 {
+                    if (!selectedToppingIDs.Contains(t.Id))
+                    {
+                        toppingIdsToRemove.Add(t.Id);
+                    }
+                }
+
+                System.Diagnostics.Debug.WriteLine("Toppings to remove: ");
+                foreach (int id in toppingIdsToRemove)
+                {
+
+                    System.Diagnostics.Debug.WriteLine(id);
+                }
+
+                //Remove the toppings we no longer want
+                var getToppingsToRemoveFromDb = _context.pizzaAssociations.Where(pa => toppingIdsToRemove.Contains(pa.ToppingId));
+
+                _context.RemoveRange(getToppingsToRemoveFromDb);
+                await _context.SaveChangesAsync();
+
+
+                System.Diagnostics.Debug.WriteLine("Toppings to add / keep: ");
+                foreach (int selectedToppingID in selectedToppingIDs)
+                {
+                    System.Diagnostics.Debug.WriteLine(selectedToppingID);
                     PizzaAssociation PA = new PizzaAssociation { 
                         PizzaId = pizzaAssociation.PizzaId, 
                         ToppingId = selectedToppingID, 
                         //We can use .First() here, as pizza and topping Ids are unique
                         //Not actually sure if this is necessary, but implemented it when trying to fix
                         //a different issue. Leaving it for now
-                        Pizza = _context.Pizzas.First(p => p.Id == pizzaAssociation.PizzaId), 
+                        Pizza = _context.Pizzas.First(p => p.Id == pizzaAssociation.PizzaId),
                         Topping = _context.Toppings.First(t => t.Id == selectedToppingID)
                     };
+
+                    if (!_context.pizzaAssociations.Contains(PA))
+                    {
+                        _context.Add(PA);
+                        await _context.SaveChangesAsync();
+                    }
+                    else
+                    {
+                        System.Diagnostics.Debug.WriteLine("Association exists, skipping");
+                    }
+
                     
-                    _context.Add(PA);
-                    await _context.SaveChangesAsync();
                 }
-                return RedirectToAction("AddToCart", "OrderAPizza", new { pizzaId = pizzaAssociation.PizzaId});
+                //return RedirectToAction("AddToCart", "OrderAPizza", new { pizzaId = pizzaAssociation.PizzaId });
+                return RedirectToAction("Create");
             }
 
             ViewData["PizzaId"] = new SelectList(_context.Pizzas, "Id", "Name", pizzaAssociation.PizzaId);

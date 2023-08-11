@@ -62,10 +62,10 @@ namespace PizzaStore.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,DoughType,CheeseType")] Pizza pizza)
+        public async Task<IActionResult> Create([Bind("Name,Id,DoughType,CheeseType")] Pizza pizza)
         {
             if (ModelState.IsValid)
-            { //,IsVegan,ImagePath, Calories,
+            {
 
                 if(pizza.Name == null) //Set a default name if the user chooses not to add one
                 {
@@ -106,7 +106,7 @@ namespace PizzaStore.Controllers
 
                 _context.Add(pizza);
                 await _context.SaveChangesAsync();
-                return RedirectToAction("Create", "PizzaAssociations");
+                return RedirectToAction("Create", "PizzaAssociations", new {Pizza = pizza});
             }
             return View(pizza);
         }
