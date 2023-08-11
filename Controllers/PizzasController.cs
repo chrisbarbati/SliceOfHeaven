@@ -2,7 +2,9 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System.Security.Claims;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using PizzaStore.Data;
@@ -10,6 +12,7 @@ using PizzaStore.Models;
 
 namespace PizzaStore.Controllers
 {
+    [Authorize()]
     public class PizzasController : Controller
     {
         private readonly ApplicationDbContext _context;
@@ -59,7 +62,7 @@ namespace PizzaStore.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Name,DoughType,CheeseType")] Pizza pizza)
+        public async Task<IActionResult> Create([Bind("Id,DoughType,CheeseType")] Pizza pizza)
         {
             if (ModelState.IsValid)
             { //,IsVegan,ImagePath, Calories,
@@ -68,6 +71,8 @@ namespace PizzaStore.Controllers
                 {
                     pizza.Name = "Your pizza";
                 }
+
+                pizza.Price = 20;//Base price of a pizza is $20.
 
 
                 if(pizza.DoughType == Dough.Vegan && pizza.CheeseType == Cheese.Vegan)

@@ -22,6 +22,16 @@ namespace PizzaStore
                 .AddEntityFrameworkStores<ApplicationDbContext>();
             builder.Services.AddControllersWithViews();
 
+            builder.Services.AddAuthentication().
+                AddGoogle(options =>
+                {
+                    //Access Google Auth section of the appsettings file
+                    IConfigurationSection googleAuth = builder.Configuration.GetSection("Authentication:Google");
+
+                    options.ClientId = googleAuth["Client Id"];
+                    options.ClientSecret = googleAuth["Client Secret"];
+                });
+
             var app = builder.Build();
 
             // Configure the HTTP request pipeline.

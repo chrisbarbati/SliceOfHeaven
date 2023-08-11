@@ -6,10 +6,13 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using PizzaStore.Data;
+using PizzaStore.Controllers;
 using PizzaStore.Models;
+using Microsoft.AspNetCore.Authorization;
 
 namespace PizzaStore.Controllers
 {
+    [Authorize()]
     public class PizzaAssociationsController : Controller
     {
         private readonly ApplicationDbContext _context;
@@ -89,11 +92,12 @@ namespace PizzaStore.Controllers
                     _context.Add(PA);
                     await _context.SaveChangesAsync();
                 }
-                return RedirectToAction(nameof(Index));
+                return RedirectToAction("AddToCart", "OrderAPizza", new { pizzaId = pizzaAssociation.PizzaId});
             }
 
             ViewData["PizzaId"] = new SelectList(_context.Pizzas, "Id", "Name", pizzaAssociation.PizzaId);
             ViewData["ToppingId"] = new SelectList(_context.Toppings, "Id", "Name", pizzaAssociation.ToppingId);
+
             return View(pizzaAssociation);
         }
 

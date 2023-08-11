@@ -37,7 +37,7 @@ namespace PizzaStore.Models
         public int Id { get; set; }
 
         [MaxLength(100)]
-        public String Name { get; set; }
+        public String? Name { get; set; }
 
         [Range(0, 30000)] //Unsure how many calories are in an entire pizza, especially one loaded with toppings
         public int? Calories { get; set; } // Later, calculate this based on dough, cheese, and toppings

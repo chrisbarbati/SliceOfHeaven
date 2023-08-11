@@ -1,4 +1,7 @@
-﻿<nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light box-shadow mb-3">
+﻿@using PizzaStore.Models;
+@using System.Security.Claims;
+
+<nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light box-shadow mb-3">
     <!--  bg-white  border-bottom -->
     <div class="container-fluid">
         <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">Slice Of Heaven</a>
@@ -8,26 +11,35 @@
         </button>
         <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
             <ul class="navbar-nav flex-grow-1">
-                @foreach (var menuItem in Model)
+                @foreach (MenuItem menuItem in Model)
                 {
-                    if (menuItem.Authorized && !User.Identity.IsAuthenticated)
+                    if (menuItem.Authorized == true && !User.Identity.IsAuthenticated)
                     {
                         continue;
                     }
-                    /*
-                    Ask Shaun how to fix this
 
-                    if (User.Identity.IsAuthenticated && menuItem.AllowedRoles != null && menuItem.AllowedRoles.Count > 0)
+                    string userRole = "";
+
+                    if (User.IsInRole("Administrator"))
                     {
-                        if(menuItem.AllowedRoles.Find(role => User.IsInRole(role)) == null)
-                        {
-                            continue;
-                        }
+                        //System.Diagnostics.Debug.WriteLine("foo");
+                        userRole = "Administrator";
                     }
-                    */
-                    if (menuItem.DropdownItems != null)//Left off 1:05, https://www.youtube.com/watch?v=deemJZyuadI
+                    else if (User.IsInRole("Customer"))
                     {
-                        
+                        //System.Diagnostics.Debug.WriteLine("bar");
+                        userRole = "Customer";
+                    }
+
+                    if(menuItem.AllowedRoles == null)
+                    {
+                        //System.Diagnostics.Debug.WriteLine("foobar");
+                        menuItem.AllowedRoles = new List<string>{""};
+                    }
+
+
+                    if (menuItem.DropdownItems != null && menuItem.AllowedRoles.Contains(userRole))
+                    {
                         <li class="nav-item dropdown">
                             <a class="nav-link dropdown-toggle" href=# id="navBarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                                 @menuItem.Label
@@ -36,22 +48,6 @@
                             <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
                                 @foreach (var dropdownItem in menuItem.DropdownItems)
                                 {
-                                    if (menuItem.Authorized && !User.Identity.IsAuthenticated)
-                                    {
-                                        continue;
-                                    }
-                                        /*
-                                        Ask Shaun how to fix this
-
-                                    if (User.Identity.IsAuthenticated && menuItem.AllowedRoles != null && menuItem.AllowedRoles.Count > 0)
-                                    {
-                                        if (menuItem.AllowedRoles.Find(role => User.IsInRole(role)) == null)
-                                        {
-                                            continue;
-                                        }
-                                    }
-
-                                    */
                                     <li>
                                         <a class="dropdown-item" asp-controller="@dropdownItem.Controller" asp-action="@dropdownItem.Action">
                                             @dropdownItem.Label
@@ -61,10 +57,16 @@
                             </ul>
                         </li>
                     }
-                    else
+                    else if (menuItem.Authorized == false)
                     {
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-controller=@menuItem.Controller asp-action=@menuItem.Action>@menuItem.Label</a>
+                            <a class="nav-link" asp-controller=@menuItem.Controller asp-action=@menuItem.Action>@menuItem.Label</a>
+                        </li>
+                    }
+                    else if (menuItem.Authorized == true && menuItem.AllowedRoles.Contains(userRole))
+                    {
+                        <li class="nav-item">
+                            <a class="nav-link" asp-controller=@menuItem.Controller asp-action=@menuItem.Action>@menuItem.Label</a>
                         </li>
                     }
                 }
