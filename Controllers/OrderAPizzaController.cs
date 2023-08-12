@@ -4,6 +4,8 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using PizzaStore.Data;
 using PizzaStore.Models;
+using Stripe;
+using Stripe.Checkout;
 using System.Security.Claims;
 
 namespace PizzaStore.Controllers
@@ -14,9 +16,12 @@ namespace PizzaStore.Controllers
         //Context
         private ApplicationDbContext _context;
 
-        public OrderAPizzaController(ApplicationDbContext context)
+        private IConfiguration _configuration;
+
+        public OrderAPizzaController(ApplicationDbContext context, IConfiguration configuration)
         {
             _context = context;
+            _configuration = configuration;
         }
 
         //[HttpPost]
@@ -121,7 +126,7 @@ namespace PizzaStore.Controllers
                 .ThenInclude(cartItem => cartItem.Pizza)
                 .FirstOrDefaultAsync(cart => cart.UserId == userId && cart.Active == true);
 
-            var Order = new Order {
+            var Order = new PizzaStore.Models.Order {
                 UserId = userId,
                 Cart = cart,
                 Total = cart.CartItems.Sum(cartItem => cartItem.Quantity * cartItem.Price),
@@ -132,6 +137,64 @@ namespace PizzaStore.Controllers
             ViewData["PaymentMethods"] = new SelectList(Enum.GetValues(typeof(PaymentMethods)));
 
             return View(Order);
+        }
+
+        public async Task<IActionResult> Payment(string ShippingAddress, PaymentMethods paymentMethod)
+        {
+            var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+
+            var cart = await _context.Cart
+                .Include(cart => cart.CartItems)
+                .FirstOrDefaultAsync(cart => cart.UserId == userId && cart.Active == true);
+
+            if (cart == null)
+            {
+                return NotFound();
+            }
+
+            //Add order data to the session
+            HttpContext.Session.SetString("ShippingAddress", ShippingAddress);
+            HttpContext.Session.SetString("PaymentMethod", paymentMethod.ToString());
+
+            //Set the Stripe API Key
+            StripeConfiguration.ApiKey = _configuration.GetSection("Stripe")["SecretKey"];
+
+            //Set Stripe options
+            var options = new SessionCreateOptions
+            {
+                LineItems = new List<SessionLineItemOptions>
+                {
+                    new SessionLineItemOptions
+                    {
+                        PriceData = new SessionLineItemPriceDataOptions
+                        {
+                            UnitAmount = (long)(cart.CartItems.Sum(cartItem => cartItem.Quantity * cartItem.Price) * 100),
+                            Currency = "cad",
+                            ProductData = new SessionLineItemPriceDataProductDataOptions
+                            {
+                                Name = "Slice Of Heaven Purchase",
+                            },
+                        },
+                        Quantity = 1
+                    },
+                },
+                PaymentMethodTypes = new List<string>
+                {
+                    "card"
+                },
+                Mode = "payment",
+                SuccessUrl = "https://" + Request.Host + "/OrderAPizza/SaveOrder", //Check this out after
+                CancelUrl = "https://" + Request.Host + "/OrderAPizza/ViewMyCart",
+            };
+
+            System.Diagnostics.Debug.WriteLine("https://" + Request.Host + "/Home/About");
+            System.Diagnostics.Debug.WriteLine("https://" + Request.Host + "/OrderAPizza/ViewMyCart");
+
+            var service = new SessionService();
+            Session session = service.Create(options);
+
+            Response.Headers.Add("Location", session.Url);
+            return new StatusCodeResult(303);
         }
 
         public async Task<IActionResult> Index()
