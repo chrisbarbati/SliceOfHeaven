@@ -178,7 +178,7 @@ namespace PizzaStore.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("Cart");
+                    b.ToTable("Cart", (string)null);
                 });
 
             modelBuilder.Entity("PizzaStore.Models.CartItem", b =>
@@ -207,7 +207,7 @@ namespace PizzaStore.Migrations
 
                     b.HasIndex("ProductId");
 
-                    b.ToTable("CartItems");
+                    b.ToTable("CartItems", (string)null);
                 });
 
             modelBuilder.Entity("PizzaStore.Models.Order", b =>
@@ -251,7 +251,7 @@ namespace PizzaStore.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("Order");
+                    b.ToTable("Order", (string)null);
                 });
 
             modelBuilder.Entity("PizzaStore.Models.Pizza", b =>
@@ -289,7 +289,7 @@ namespace PizzaStore.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Pizzas");
+                    b.ToTable("Pizzas", (string)null);
                 });
 
             modelBuilder.Entity("PizzaStore.Models.PizzaAssociation", b =>
@@ -304,7 +304,7 @@ namespace PizzaStore.Migrations
 
                     b.HasIndex("ToppingId");
 
-                    b.ToTable("pizzaAssociations");
+                    b.ToTable("pizzaAssociations", (string)null);
                 });
 
             modelBuilder.Entity("PizzaStore.Models.Topping", b =>
@@ -340,7 +340,7 @@ namespace PizzaStore.Migrations
 
                     b.HasIndex("PizzaId");
 
-                    b.ToTable("Toppings");
+                    b.ToTable("Toppings", (string)null);
                 });
 
             modelBuilder.Entity("PizzaStore.Models.User", b =>

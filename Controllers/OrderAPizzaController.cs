@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using PizzaStore.Data;
 using PizzaStore.Models;
@@ -81,6 +82,56 @@ namespace PizzaStore.Controllers
                 .FirstOrDefaultAsync(cart => cart.UserId == userId && cart.Active == true);
 
             return View(cart);
+        }
+
+        [Authorize()]
+        public async Task<IActionResult> DeleteCartItem(int cartItemId)
+        {
+            var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+
+            var cart = await _context.Cart
+                .FirstOrDefaultAsync(cart => cart.UserId == userId && cart.Active == true);
+
+            if(cart == null)
+            {
+                return NotFound();
+            }
+
+            var cartItem = await _context.CartItems
+                .FirstOrDefaultAsync(cartItem => cartItem.Cart == cart && cartItem.Id == cartItemId);
+
+            if(cartItem != null)
+            {
+                _context.CartItems.Remove(cartItem);
+                await _context.SaveChangesAsync();
+
+                return RedirectToAction("ViewMyCart");
+            }
+
+            return View();
+        }
+
+        public async Task<IActionResult> Checkout()
+        {
+            var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+
+            var cart = await _context.Cart
+                .Include(cart => cart.User)
+                .Include(cart => cart.CartItems)
+                .ThenInclude(cartItem => cartItem.Pizza)
+                .FirstOrDefaultAsync(cart => cart.UserId == userId && cart.Active == true);
+
+            var Order = new Order {
+                UserId = userId,
+                Cart = cart,
+                Total = cart.CartItems.Sum(cartItem => cartItem.Quantity * cartItem.Price),
+                ShippingAddress = "",
+                PaymentMethod = PaymentMethods.VISA
+            };
+
+            ViewData["PaymentMethods"] = new SelectList(Enum.GetValues(typeof(PaymentMethods)));
+
+            return View(Order);
         }
 
         public async Task<IActionResult> Index()

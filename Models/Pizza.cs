@@ -59,6 +59,7 @@ namespace PizzaStore.Models
         [Display(Name="Gluten-Free")]
         public Boolean? IsGlutenFree { get; set; } //Determined based on dough and toppings
 
+        [Display(Name="Image")]
         public String? ImagePath { get; set; } //Not really optional, but not added by customer, so we need it to be nullable
         
         public List<Topping>? Toppings { get; set; } //Optional, toppings not required

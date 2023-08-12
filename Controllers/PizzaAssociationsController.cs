@@ -50,7 +50,7 @@ namespace PizzaStore.Controllers
         }
 
         // GET: PizzaAssociations/Create
-        public IActionResult Create()
+        public IActionResult Create(Pizza pizza)
         {
             ViewBag.AvailableToppings = _context.Toppings.ToList();
             Pizza currentPizza = _context.Pizzas.OrderBy(p => p.Id).LastOrDefault();
@@ -122,18 +122,30 @@ namespace PizzaStore.Controllers
                 await _context.SaveChangesAsync();
 
 
-                System.Diagnostics.Debug.WriteLine("Toppings to add / keep: ");
+
+                Pizza p = _context.Pizzas.First(p => p.Id == pizzaAssociation.PizzaId);
+
                 foreach (int selectedToppingID in selectedToppingIDs)
                 {
-                    System.Diagnostics.Debug.WriteLine(selectedToppingID);
+                    //We can use .First() here, as pizza and topping Ids are unique
+                    //Not actually sure if this is necessary, but implemented it when trying to fix
+                    //a different issue. Leaving it for now
+                    Topping t = _context.Toppings.First(t => t.Id == selectedToppingID);
+
+                    //Update the price of the pizza
+                    p.Price += t.Price;
+
+                    //Update the isVegan status of the pizza dependant on topping
+                    if(t.IsVegan == false)
+                    {
+                        p.IsVegan = false;
+                    }
+
                     PizzaAssociation PA = new PizzaAssociation { 
                         PizzaId = pizzaAssociation.PizzaId, 
                         ToppingId = selectedToppingID, 
-                        //We can use .First() here, as pizza and topping Ids are unique
-                        //Not actually sure if this is necessary, but implemented it when trying to fix
-                        //a different issue. Leaving it for now
-                        Pizza = _context.Pizzas.First(p => p.Id == pizzaAssociation.PizzaId),
-                        Topping = _context.Toppings.First(t => t.Id == selectedToppingID)
+                        Pizza = p,
+                        Topping = t
                     };
 
                     if (!_context.pizzaAssociations.Contains(PA))

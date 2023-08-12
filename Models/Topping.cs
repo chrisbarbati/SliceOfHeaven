@@ -31,7 +31,7 @@ namespace PizzaStore.Models
         public Boolean IsVegan { get;  set; }
 
         [Required()]
-        [Display(Name = "Image Path")]
+        [Display(Name = "Image")]
         public String imagePath { get; set; }
     }
 }

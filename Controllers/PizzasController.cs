@@ -75,7 +75,7 @@ namespace PizzaStore.Controllers
                 pizza.Price = 20;//Base price of a pizza is $20.
 
 
-                if(pizza.DoughType == Dough.Vegan && pizza.CheeseType == Cheese.Vegan)
+                if(pizza.DoughType == Dough.Vegan && (pizza.CheeseType == Cheese.Vegan || pizza.CheeseType == Cheese.None))
                 {
                     pizza.IsVegan = true; //Set whether the base pizza is vegan or not.
                 }

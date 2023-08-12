@@ -1,21 +1,22 @@
 ﻿@model PizzaStore.Models.PizzaAssociation
 
 @{
-    ViewData["Title"] = "Create";
+    ViewData["Title"] = "Topping Selection:";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h1>Create</h1>
+<h1>@ViewData["Title"]</h1>
 
-<h4>PizzaAssociation</h4>
+<h4>Enhance your pizza experience with some tasty toppings!</h4>
+
 <hr />
-<div class="row">
+
+<div style="display: flex; flex-direction: row;">
+<div style="flex-basis: 60%;" class="row">
     <div class="col-md-4">
         <form asp-action="Create" id="toppingsForm">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="form-group">
-                <label asp-for="PizzaId" class="control-label"></label>
-                <label>Add toppings to pizza</label>
             </div>
 
             <div class="form-group">
@@ -26,7 +27,7 @@
                     @Html.HiddenFor(pizzaAssociation => pizzaAssociation.PizzaId) <!-- Hidden field to bind PizzaId -->
                             <!-- Checks the SelectedTopping list and sets the checkbox to checked or unchecked dependent on that -->
                             
-                            <input type="checkbox" name="selectedToppingIDs" 
+                            <input class="my-3" type="checkbox" name="selectedToppingIDs" 
                             
                             @if (ViewBag.SelectedToppings.Contains(toppingOption))
                             {
@@ -62,21 +63,22 @@
             </div>
         </form>
     </div>
-    <div>
-        <dl class="row">
-            <dd>
-                @{
-                    ApplicationDbContext _context = ViewBag.Context;
-                    Pizza pizza = ViewBag.CurrentPizza;
-
-                    <partial name="_InProgressPizzaImage" model="pizza" />
-                }
-            </dd>
-        </dl>
-    </div>
+    
 </div>
 
+<div style="flex-basis: 40%;">
+    <dl class="row">
+        <dd>
+            @{
+                ApplicationDbContext _context = ViewBag.Context;
+                Pizza pizza = ViewBag.CurrentPizza;
 
+                <partial name="_InProgressPizzaImage" model="pizza" />
+            }
+        </dd>
+    </dl>
+</div>
+</div>
 
 <div>
     <a asp-action="Index">Back to List</a>

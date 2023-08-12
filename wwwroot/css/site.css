@@ -17,7 +17,7 @@ html {
 }
 
 header {
-    background-color: rgba(160, 160, 160, .7);
+    background-color: rgba(180, 180, 180, .8);
 }
 
 header, footer {
@@ -26,12 +26,12 @@ header, footer {
 }
 
 .container {
-    background-color: rgba(160, 160, 160, .5);
+    background-color: rgba(180, 180, 180, .7);
     color: black;
 }
 
 footer{
-    background-color: rgba(160, 160, 160, .7);
+    background-color: rgba(180, 180, 180, .8);
 }
 
 nav {

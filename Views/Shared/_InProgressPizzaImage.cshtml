@@ -36,6 +36,8 @@
 
     List<PizzaAssociation> PizzaAssociations = _context.pizzaAssociations.ToList().Where(p => p.PizzaId == Model.Id).ToList();
 
+    Pizza pizza = _context.Pizzas.FirstOrDefault(p => p.Id == Model.Id);
+
     //Get all of the topping IDs associated with this Pizza, and store them in a List
     List<int> toppingIds = new List<int>();
 
@@ -52,6 +54,15 @@
     using (Graphics gr = Graphics.FromImage(img))
     {
         gr.DrawImage(CompletedPizza, new System.Drawing.Rectangle(0, 0, CompletedPizza.Width, CompletedPizza.Height));
+
+        gr.DrawImage(Image.FromFile("wwwroot/pizzaImages/sauce1.png"),
+        new System.Drawing.Rectangle(0, 0, CompletedPizza.Width, CompletedPizza.Height));
+
+        if (pizza.CheeseType != Cheese.None)
+        {
+            gr.DrawImage(Image.FromFile("wwwroot/pizzaImages/cheese1.png"),
+            new System.Drawing.Rectangle(0, 0, CompletedPizza.Width, CompletedPizza.Height));
+        }
 
         foreach (Topping t in Toppings)
         {
