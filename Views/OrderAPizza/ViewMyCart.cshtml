@@ -33,7 +33,7 @@
         <tbody>
             @foreach (var cartItem in Model.CartItems)
             {
-                var subtotal = cartItem.Price * (1); <!-- Quantity would be second term-->
+                var subtotal = cartItem.Pizza.Price * (1); <!-- Quantity would be second term-->
 
                 <tr>
                     <td>@cartItem.Pizza.Name</td>
@@ -68,8 +68,8 @@
                             <input class="btn btn-danger" type="submit" value="Remove">
                         </form>
 
-                        <a class="btn btn-secondary" asp-action="pizzaDetails" asp-route-id="@cartItem.ProductId">
-                            View Pizza
+                        <a class="btn btn-secondary" asp-controller="PizzaAssociations" asp-action="Edit" asp-route-pizzaId="@cartItem.Pizza.Id">
+                            Edit Toppings
                         </a>
                     </td>
                 </tr>
@@ -86,6 +86,7 @@
                         decimal total = 0;
                         foreach(CartItem cartItem in Model.CartItems)
                         {
+                            cartItem.Price = (decimal)cartItem.Pizza.Price;
                             total += cartItem.Price;
                         }
 

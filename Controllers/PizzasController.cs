@@ -106,7 +106,7 @@ namespace PizzaStore.Controllers
 
                 _context.Add(pizza);
                 await _context.SaveChangesAsync();
-                return RedirectToAction("Create", "PizzaAssociations", new {Pizza = pizza});
+                return RedirectToAction("Create", "PizzaAssociations", new {pizzaId = pizza.Id});
             }
             return View(pizza);
         }
