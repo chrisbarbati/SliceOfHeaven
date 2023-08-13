@@ -15,13 +15,13 @@ namespace PizzaStore.Models
     {
         public int Id { get; set; }
 
-        public int UserId { get; set; }
+        public String UserId { get; set; }
 
         public int CartId { get; set; }
 
         public decimal Total { get; set; }
 
-        public string ShippinAddress { get; set; }
+        public string ShippingAddress { get; set; }
 
         public bool PaymentReceived { get; set; }
 

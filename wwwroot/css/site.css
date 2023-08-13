@@ -8,16 +8,55 @@ html {
   }
 }
 
+/* Web font */
+@import url('https://fonts.googleapis.com/css2?family=Lobster&display=swap');
+
+@font-face {
+    font-family: "Lobster";
+    src: url('/fonts/Lobster-Regular.ttf') format('truetype');
+}
+
+header {
+    background-color: rgba(180, 180, 180, .8);
+}
+
+header, footer {
+    font-size: 130%;
+    font-family: "Lobster";
+}
+
+.container {
+    background-color: rgba(180, 180, 180, .7);
+    color: black;
+}
+
+footer{
+    background-color: rgba(180, 180, 180, .8);
+}
+
+nav {
+    background: none;
+    height: 5rem;
+}
+
 html {
   position: relative;
   min-height: 100%;
 }
 
 body {
-  margin-bottom: 60px;
+    margin-bottom: 60px; 
+    /* https://www.pexels.com/photo/pizza-with-green-leaves-on-top-5792322/ */
+    background-image: url(/img/background2.jpg);
+    background-size: cover;
 }
 
 .topping-thumbnail{
     width: 5em;
     height: 5em;
+}
+
+.pizzaPreview{
+    width: 20em;
+    height: 20em;
 }

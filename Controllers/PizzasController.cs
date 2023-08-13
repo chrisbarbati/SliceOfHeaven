@@ -3,7 +3,9 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System.Security.Claims;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using PizzaStore.Data;
@@ -11,6 +13,7 @@ using PizzaStore.Models;
 
 namespace PizzaStore.Controllers
 {
+    [Authorize()]
     public class PizzasController : Controller
     {
         private readonly ApplicationDbContext _context;
@@ -31,6 +34,9 @@ namespace PizzaStore.Controllers
         // GET: Pizzas/Details/5
         public async Task<IActionResult> Details(int? id)
         {
+            ViewBag.PizzaAssociations = _context.pizzaAssociations.ToList().Where(p => p.PizzaId == id).ToList();
+            ViewBag.Toppings = _context.Toppings.ToList();
+
             if (id == null || _context.Pizzas == null)
             {
                 return NotFound();
@@ -75,14 +81,47 @@ namespace PizzaStore.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Name,Calories,DoughType,CheeseType,IsVegan")] Pizza pizza, int[] Toppings)
+        public async Task<IActionResult> Create([Bind("Name,Id,DoughType,CheeseType")] Pizza pizza)
         {
             if (ModelState.IsValid)
             {
-                // Populate the Toppings list by querying the database for matching Topping IDs
-                pizza.Toppings = new List<Topping>(); //Note: Always initialize before setting = to something,
-                //otherwise causes NullReferenceException
-                pizza.Toppings = _context.Toppings.Where(t => Toppings.Contains(t.Id)).ToList();
+
+                if(pizza.Name == null) //Set a default name if the user chooses not to add one
+                {
+                    pizza.Name = "Your pizza";
+                }
+
+                pizza.Price = 20;//Base price of a pizza is $20.
+
+
+                if(pizza.DoughType == Dough.Vegan && (pizza.CheeseType == Cheese.Vegan || pizza.CheeseType == Cheese.None))
+                {
+                    pizza.IsVegan = true; //Set whether the base pizza is vegan or not.
+                }
+                else
+                {
+                    pizza.IsVegan = false; //Toppings will also affect this
+                }
+
+                if (pizza.CheeseType == Cheese.None)
+                { //Pizza has 600 calories from dough alone
+                    pizza.Calories = 600;
+                }
+                else
+                { //Or 1000 when cheese is added
+                    pizza.Calories = 1000;
+                }
+
+                if (pizza.DoughType == Dough.NoGluten)
+                {//Gluten-free pizza has a different crust
+                    pizza.IsGlutenFree = true;
+                    pizza.ImagePath = "crust2.png";
+                }
+                else
+                {//All other pizzas have crust1
+                    pizza.IsGlutenFree = false;
+                    pizza.ImagePath = "crust1.png";
+                }
 
                 /*
                  * Code is not co-operating, use this for diagnostics and delete it later on
@@ -97,7 +136,7 @@ namespace PizzaStore.Controllers
 
                 _context.Add(pizza);
                 await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+                return RedirectToAction("Create", "PizzaAssociations", new {pizzaId = pizza.Id});
             }
             return View(pizza);
         }
@@ -123,7 +162,7 @@ namespace PizzaStore.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Name,Calories,DoughType,CheeseType,IsVegan")] Pizza pizza)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,Name,Calories,DoughType,CheeseType,IsVegan,ImagePath")] Pizza pizza)
         {
             if (id != pizza.Id)
             {

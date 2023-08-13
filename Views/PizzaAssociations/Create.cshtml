@@ -1,0 +1,94 @@
+﻿@model PizzaStore.Models.PizzaAssociation
+
+@{
+    ViewData["Title"] = "Topping Selection:";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h1>@ViewData["Title"]</h1>
+
+<h4>Enhance your pizza experience with some tasty toppings!</h4>
+
+<hr />
+
+<div style="display: flex; flex-direction: row;">
+<div style="flex-basis: 60%;" class="row">
+    <div class="col-md-4">
+        <form asp-action="Create" id="toppingsForm">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+            </div>
+
+            <div class="form-group">
+                @{  
+                    foreach (Topping toppingOption in ViewBag.AvailableToppings)
+                    {
+                        <div>
+                        <!-- Bind the pizza id -->
+                        @Html.HiddenFor(pizzaAssociation => pizzaAssociation.PizzaId) <!-- Hidden field to bind PizzaId -->
+                                <input type="hidden" name="pizzaId" value="@ViewBag.currentPizza.Id" />
+                            <!-- Checks the SelectedTopping list and sets the checkbox to checked or unchecked dependent on that -->
+                            
+                            <input class="my-3" type="checkbox" name="selectedToppingIDs" 
+                            
+                            @if (ViewBag.SelectedToppings.Contains(toppingOption))
+                            {
+                                <text>checked="checked"</text>
+                            }
+                            
+                            onchange="
+                                document.getElementById('toppingsForm').action =
+                                '@Url.Action("Create", "PizzaAssociations", new {
+                                    pizzaId = ViewBag.currentPizza.Id 
+                                })';
+                            document.getElementById('toppingsForm').submit();
+                            " 
+                            
+                            value="@toppingOption.Id" />
+
+                            <!-- 
+                            Results in an array of integers, each of which is a toppingID 
+                            ASP.NET doesn't seem to include an easy way to make a checkbox submit a form, 
+                            so we need some JavaScript to do it. 
+                            
+                            Using that to submit this form every time 
+                            a checkbox is checked or unchecked, since that makes it re-render the partial.
+
+                            Since we are using JavaScript, there is probably a more elegant solution than to use
+                            my partial at all. But since I have it I'm going to use it
+                            -->
+
+                <label>@toppingOption.Name</label>
+                </div>
+            }
+            }
+            </div>
+            <div class="form-group">
+                <a class="btn btn-primary" asp-controller="OrderAPizza" asp-action="AddToCart" asp-route-pizzaId="@ViewBag.currentPizza.Id">Done</a>
+            </div>
+        </form>
+    </div>
+    
+</div>
+
+<div style="flex-basis: 40%;">
+    <dl class="row">
+        <dd>
+            @{
+                ApplicationDbContext _context = ViewBag.Context;
+                Pizza pizza = ViewBag.CurrentPizza;
+
+                <partial name="_InProgressPizzaImage" model="pizza" />
+            }
+        </dd>
+    </dl>
+</div>
+</div>
+
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

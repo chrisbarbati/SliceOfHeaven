@@ -1,0 +1,105 @@
+﻿@model PizzaStore.Models.Cart
+
+@{
+    if (Model == null || Model.CartItems == null || Model.CartItems.Count() == 0)
+    {
+        <div class="alert alert-warning">
+            <p>Your cart is empty!
+        </p>
+        </div>
+        return;
+    }
+}
+
+@{
+    ViewData["Title"] = "Cart Details for" + Model.User.Email;
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h1>@ViewData["Title"]</h1>
+
+<div>
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>Pizza:</th>
+                <th>Price:</th>
+                <th>Vegan:</th>
+                <th>Gluten-Free:</th>
+                <th>Sub-Total:</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var cartItem in Model.CartItems)
+            {
+                var subtotal = cartItem.Pizza.Price * (1); <!-- Quantity would be second term-->
+
+                <tr>
+                    <td>@cartItem.Pizza.Name</td>
+                    <td>@cartItem.Pizza.Price</td>
+                    <td>@{
+                            if (cartItem.Pizza.IsVegan == true)
+                            {
+                                <text>Yes</text>
+                            }
+                            else
+                            {
+                                <text>No</text>
+                            }
+                        }
+                    </td>
+                    <td>
+                        @{
+                            if (cartItem.Pizza.IsGlutenFree == true)
+                            {
+                                <text>Yes</text>
+                            }
+                            else
+                            {
+                                <text>No</text>
+                            }
+                        }
+                    </td>
+                    <td>@subtotal</td>
+                    <td>
+                        <form class="d-inline" asp-action="DeleteCartItem">
+                            <input type="hidden" name="cartItemId" value="@cartItem.Id">
+                            <input class="btn btn-danger" type="submit" value="Remove">
+                        </form>
+
+                        <a class="btn btn-secondary" asp-controller="PizzaAssociations" asp-action="Edit" asp-route-pizzaId="@cartItem.Pizza.Id">
+                            Edit Toppings
+                        </a>
+                    </td>
+                </tr>
+                
+            }
+        </tbody>
+        <tfoot>
+            <tr>
+                <th>Total:</th>
+                <td> </td>
+                <td> </td>
+                <td> </td>
+                <td colspan="3">@{
+                        decimal total = 0;
+                        foreach(CartItem cartItem in Model.CartItems)
+                        {
+                            cartItem.Price = (decimal)cartItem.Pizza.Price;
+                            total += cartItem.Price;
+                        }
+
+                        <text>@total</text>
+
+                        }
+                        </td>
+                        <td></td>
+            </tr>
+        </tfoot>
+    </table>
+    
+</div>
+<div>
+    <a asp-action="Checkout" class="btn btn-success">Checkout</a>
+</div>

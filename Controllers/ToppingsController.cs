@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -10,6 +11,7 @@ using PizzaStore.Models;
 
 namespace PizzaStore.Controllers
 {
+    [Authorize(Roles = "Administrator")]
     public class ToppingsController : Controller
     {
         private readonly ApplicationDbContext _context;
@@ -19,9 +21,14 @@ namespace PizzaStore.Controllers
             _context = context;
         }
 
+
+        //[AllowAnonymous] Lets non-registered users see a page
         // GET: Toppings
         public async Task<IActionResult> Index()
         {
+
+            ViewBag.PizzaAssociations = _context.pizzaAssociations.ToList<PizzaAssociation>();
+
               return _context.Toppings != null ? 
                           View(await _context.Toppings.ToListAsync()) :
                           Problem("Entity set 'ApplicationDbContext.Toppings'  is null.");

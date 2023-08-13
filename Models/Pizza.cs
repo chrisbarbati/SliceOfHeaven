@@ -33,16 +33,17 @@ namespace PizzaStore.Models
 
     public class Pizza
     {
+        [Required()]
         public int Id { get; set; }
 
-
-        [Required()]
         [MaxLength(100)]
-        public String Name { get; set; }
+        public String? Name { get; set; }
 
-        [Required()]
         [Range(0, 30000)] //Unsure how many calories are in an entire pizza, especially one loaded with toppings
-        public int Calories { get; set; } // Later, calculate this based on dough, cheese, and toppings
+        public int? Calories { get; set; } // Later, calculate this based on dough, cheese, and toppings
+        
+        [Range(0, 100)]
+        public double? Price { get; set; }
 
         [Required()]
         [Display(Name = "Dough")]
@@ -50,23 +51,22 @@ namespace PizzaStore.Models
 
         [Required()]
         [Display(Name = "Cheese")]
-        public Cheese CheeseType { get; set; } //Not required, as cheese is technically optional
+        public Cheese CheeseType { get; set; }
 
-        [Required()]
         [Display(Name="Vegan")]
-        public Boolean IsVegan { get; set; } //Later, determine this based on dough, cheese, and toppings
+        public Boolean? IsVegan { get; set; } //Later, determine this based on dough, cheese, and toppings
 
+        [Display(Name="Gluten-Free")]
+        public Boolean? IsGlutenFree { get; set; } //Determined based on dough and toppings
+
+        [Display(Name="Image")]
+        public String? ImagePath { get; set; } //Not really optional, but not added by customer, so we need it to be nullable
+        
         public List<Topping>? Toppings { get; set; } //Optional, toppings not required
 
-        public List<PizzaTopping> PizzaToppings { get; set; } //Required to make junction table
+        public List<PizzaAssociation>? PizzaAssociations { get; set; }
 
         public List<CartItem>? CartItems { get; set; }
-
-        /**
-         *  TODO: Dynamically overlay all of the selected topping images to show 
-         *  a preview of what the pizza would look like
-         */
-        //public Image PizzaImage { get; set; } //Way to visualize how the pizza will look while creating it
         
     }
 }

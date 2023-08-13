@@ -1,0 +1,59 @@
+﻿@using PizzaStore.Models;
+@using System.Security.Claims;
+
+@{
+    /*
+    var menuItems = new List<MenuItem>
+    {
+        new MenuItem{Controller = "Home", Action = "Index", Label = "Home"},
+        new MenuItem{Controller = "Home", Action = "About", Label = "About"},
+        new MenuItem{Controller = "Pizza", Action = "Create", Label = "Create A Pizza"},
+        new MenuItem{Controller = "Home", Action = "Privacy", Label = "Privacy"}
+    };
+    */
+}
+<!--  bg-white navbar navbar-expand-sm navbar-toggleable-sm navbar-light border-bottom box-shadow mb-3-->
+<nav class="">
+    <div class="container-fluid">
+        <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">Slice of Heaven</a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
+                aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
+            <ul class="navbar-nav flex-grow-1">
+                @foreach (MenuItem menuItem in Model){
+                    /*
+                    string userRole = "";
+
+                    if (User.IsInRole("Administrator"))
+                    {
+                        System.Diagnostics.Debug.WriteLine("foo");
+                        userRole = "Administrator";
+                    }
+                    else if (User.IsInRole("Customer"))
+                    {
+                        System.Diagnostics.Debug.WriteLine("bar");
+                        userRole = "Customer";
+                    }
+
+                    if (menuItem.AllowedRoles == null)
+                    {
+                        System.Diagnostics.Debug.WriteLine("foobar");
+                        menuItem.AllowedRoles = new List<string> { " " };
+                    }
+
+                    if (menuItem.AllowedRoles.Contains(userRole))
+                    {
+                        System.Diagnostics.Debug.WriteLine(userRole + " " + menuItem.AllowedRoles);
+                        */
+                    <li class="nav-item">
+                        <a class="nav-link text-dark" asp-controller=@menuItem.Controller asp-action=@menuItem.Action>@menuItem.Label</a>
+                    </li>
+                    }
+                }
+            </ul>
+            <partial name="_LoginPartial" />
+        </div>
+    </div>
+</nav>

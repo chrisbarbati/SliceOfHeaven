@@ -17,11 +17,36 @@ namespace PizzaStore
                 options.UseSqlServer(connectionString));
             builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 
-            builder.Services.AddDefaultIdentity<User>(options => options.SignIn.RequireConfirmedAccount = true)
+            builder.Services.AddDefaultIdentity<User>(options => options.SignIn.RequireConfirmedAccount = false)
+                .AddRoles<IdentityRole>() //Enables roles
                 .AddEntityFrameworkStores<ApplicationDbContext>();
             builder.Services.AddControllersWithViews();
 
+            builder.Services.AddAuthentication().
+                AddGoogle(options =>
+                {
+                    //Access Google Auth section of the appsettings file
+                    IConfigurationSection googleAuth = builder.Configuration.GetSection("Authentication:Google");
+
+                    options.ClientId = googleAuth["Client Id"];
+                    options.ClientSecret = googleAuth["Client Secret"];
+                });
+
+            //Stripe
+            builder.Services.AddSingleton<IConfiguration>(builder.Configuration);
+
+            //Add sessions
+            builder.Services.AddSession(
+                options => {
+                    options.IdleTimeout = TimeSpan.FromMinutes(5);
+                    options.Cookie.HttpOnly = true;
+                    options.Cookie.IsEssential = true;
+
+                });
+
             var app = builder.Build();
+
+            app.UseSession();
 
             // Configure the HTTP request pipeline.
             if (app.Environment.IsDevelopment())

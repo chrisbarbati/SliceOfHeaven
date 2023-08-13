@@ -1,0 +1,83 @@
+﻿@model PizzaStore.Models.Pizza;
+@using PizzaStore.Models;
+@using PizzaStore.Data;
+@using System.Drawing;
+@using System.Drawing.Imaging;
+
+@{
+    //Display a completed image of a pizza with toppings
+    //Turns out this isn't a trivial task, but others have found a way to do it
+    //https://stackoverflow.com/questions/13068065/how-do-i-overlay-an-image-in-net
+    System.Diagnostics.Debug.WriteLine(Model);
+
+    var photoPath = (Model != null && !string.IsNullOrEmpty(Model.ImagePath)) ?
+    "wwwroot/pizzaImages/" + Model.ImagePath:
+    "noImagePathProvided"; //Update placeholder later
+
+    //Strip the extension
+    //photoPath = photoPath.Substring(0, photoPath.Length - 4);
+
+    //Image starts with crust
+    Image CompletedPizza = Image.FromFile(photoPath);
+
+
+    /*
+    * Accessing this directly in the view is a violation of convention.
+    * 
+    * Maybe clean this up later if time permits
+    * 
+    * */
+
+    ApplicationDbContext _context = ViewBag.Context;
+
+    //int numOut = 0;
+
+    //numOut = _context.Pizzas.Count();
+
+    List<PizzaAssociation> PizzaAssociations = _context.pizzaAssociations.ToList().Where(p => p.PizzaId == Model.Id).ToList();
+
+    //Get all of the topping IDs associated with this Pizza, and store them in a List
+    List<int> toppingIds = new List<int>();
+
+    foreach(PizzaAssociation pa in PizzaAssociations)
+    {
+        toppingIds.Add(pa.ToppingId);
+    }
+
+    //Get all the toppings that match these IDs and store them in a new List
+    List<Topping> Toppings = _context.Toppings.ToList().Where(t => toppingIds.Contains(t.Id)).ToList();
+
+    Image img = new Bitmap(CompletedPizza.Width, CompletedPizza.Height);
+
+    using (Graphics gr = Graphics.FromImage(img))
+    {
+        gr.DrawImage(CompletedPizza, new System.Drawing.Rectangle(0, 0, CompletedPizza.Width, CompletedPizza.Height));
+
+        foreach (Topping t in Toppings)
+        {
+            gr.DrawImage(Image.FromFile("wwwroot/pizzaImages/" + t.imagePath),
+            new System.Drawing.Rectangle(0, 0, CompletedPizza.Width, CompletedPizza.Height));
+
+            //System.Diagnostics.Debug.WriteLine();
+        }
+    }
+
+    /*
+    String outputPath = "wwwroot/temp/output" + numOut + ".png";
+
+    img.Save(outputPath, ImageFormat.Png);
+
+    outputPath = ".." + outputPath.Substring(7);
+
+    ViewBag.outputPath = outputPath;
+
+    */
+
+    String outputPath = "wwwroot/temp/output.png";
+
+    img.Save(outputPath, ImageFormat.Png);
+}
+
+
+
+<img id="photo-preview" class="pizzaPreview" src="../../temp/output.png" alt="Product Image" />
