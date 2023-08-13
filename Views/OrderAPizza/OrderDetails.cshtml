@@ -1,0 +1,67 @@
+﻿@model PizzaStore.Models.Order
+
+@{
+    if (Model == null || Model.Cart.CartItems == null || Model.Cart.CartItems.Count() == 0)
+    {
+        <div class="alert alert-warning">
+            <p>
+                Your cart is empty!
+            </p>
+        </div>
+
+        var total = Model.Total;
+
+        return;
+    }
+}
+
+@{
+    ViewData["Title"] = "Order Details for" + Model.Cart.User.Email;
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h1>@ViewData["Title"]</h1>
+
+<div>
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>Pizza:</th>
+                <th>Quantity:</th> <!-- Stubbed out, not sure if I'll add. -->
+                <th>Price:</th>
+                <th>Sub-Total:</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var cartItem in Model.Cart.CartItems)
+            {
+                var subtotal = cartItem.Price * (1);
+                <!-- Quantity would be second term-->
+
+                <tr>
+                    <td>@cartItem.Pizza.Name</td>
+                    <td>1</td><!-- Quantity to go here if implemented -->
+                    <td>@cartItem.Pizza.Price</td>
+                    <td>@subtotal</td>
+                </tr>
+            }
+        </tbody>
+        <tfoot>
+            <tr>
+                <th>Total:</th>
+                <td> </td>
+                <td> </td>
+                <td colspan="3">@Model.Total</td>
+            </tr>
+        </tfoot>
+    </table>
+</div>
+
+<div>
+
+</div>
+
+<div>
+    <a asp-controller="Pizzas" asp-action="Create">Order Another Pizza</a>
+</div>

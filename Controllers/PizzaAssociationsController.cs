@@ -50,7 +50,7 @@ namespace PizzaStore.Controllers
         }
 
         // GET: PizzaAssociations/Create
-        public IActionResult Create(Pizza pizza)
+        public IActionResult Create()
         {
             ViewBag.AvailableToppings = _context.Toppings.ToList();
             Pizza currentPizza = _context.Pizzas.OrderBy(p => p.Id).LastOrDefault();

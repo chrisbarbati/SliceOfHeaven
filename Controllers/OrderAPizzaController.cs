@@ -116,6 +116,7 @@ namespace PizzaStore.Controllers
             return View();
         }
 
+        [Authorize]
         public async Task<IActionResult> Checkout()
         {
             var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
@@ -139,6 +140,7 @@ namespace PizzaStore.Controllers
             return View(Order);
         }
 
+        [Authorize]
         public async Task<IActionResult> Payment(string ShippingAddress, PaymentMethods paymentMethod)
         {
             var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
@@ -195,6 +197,85 @@ namespace PizzaStore.Controllers
 
             Response.Headers.Add("Location", session.Url);
             return new StatusCodeResult(303);
+        }
+
+        [Authorize]
+        public async Task<IActionResult> SaveOrder()
+        {
+            var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+
+            var cart = await _context.Cart
+                .Include(cart => cart.CartItems)
+                .FirstOrDefaultAsync(cart => cart.UserId == userId && cart.Active == true);
+
+            if (cart == null)
+            {
+                return NotFound();
+            }
+
+            var paymentMethod = HttpContext.Session.GetString("PaymentMethod");
+            var shippingAddress = HttpContext.Session.GetString("ShippingAddress");
+
+            var order = new PizzaStore.Models.Order
+            {
+                UserId = userId,
+                Cart = cart,
+                Total = cart.CartItems.Sum(cartItem => cartItem.Quantity * cartItem.Price),
+                ShippingAddress = shippingAddress,
+                PaymentMethod = (PaymentMethods)Enum.Parse(typeof(PaymentMethods), paymentMethod),
+                PaymentReceived = true
+            };
+
+            await _context.AddAsync(order);
+            await _context.SaveChangesAsync();
+
+            cart.Active = false;
+            _context.Update(cart);
+            await _context.SaveChangesAsync();
+
+            return RedirectToAction("OrderDetails", new { id = order.Id });
+        }
+
+        [Authorize]
+        public async Task<IActionResult> OrderDetails(int id)
+        {
+            var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+
+            var order = await _context.Order
+                .Include(order => order.User)
+                .Include(order => order.Cart)
+                .ThenInclude(Cart => Cart.CartItems)
+                .ThenInclude(CartItem => CartItem.Pizza)
+                .FirstOrDefaultAsync(order => order.UserId == userId && order.Id == id);
+
+            //System.Diagnostics.Debug.WriteLine(order.User);
+
+            if(order == null)
+            {
+                return NotFound();
+            }
+
+            return View(order);
+        }
+
+        [Authorize]
+        public async Task<IActionResult> Orders(int id)
+        {
+            var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+
+            var order = await _context.Order
+                .OrderByDescending(order => order.Id)
+                .Where(order => order.UserId == userId)
+                .ToListAsync();
+
+            //System.Diagnostics.Debug.WriteLine(order.User);
+
+            if (order == null)
+            {
+                return NotFound();
+            }
+
+            return View(order);
         }
 
         public async Task<IActionResult> Index()
