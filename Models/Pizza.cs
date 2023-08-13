@@ -67,11 +67,6 @@ namespace PizzaStore.Models
         public List<PizzaAssociation>? PizzaAssociations { get; set; }
 
         public List<CartItem>? CartItems { get; set; }
-
-        /**
-         *  TODO: Dynamically overlay all of the selected topping images to show 
-         *  a preview of what the pizza would look like
-         */
         
     }
 }
