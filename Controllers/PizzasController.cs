@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Drawing;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
@@ -55,24 +54,6 @@ namespace PizzaStore.Controllers
         // GET: Pizzas/Create
         public IActionResult Create()
         {
-            //Get the data for toppings that are currently stored in the database, and add them to a new List of Toppings
-            List<Topping> Toppings = _context.Toppings.ToList();
-
-            //Create a new List of Images to hold all of the topping images
-            List<Image> ToppingImages = new List<Image>();
-
-            //Populate the list of topping images based on the toppings
-            //foreach(Topping topping in Toppings)
-            //{
-            //    ToppingImages.Add(Image.FromFile("/pizzaImages/" + topping.imagePath));
-            //}
-
-            System.Diagnostics.Debug.WriteLine("test");
-
-            //Add them to a ViewBag so the View can access them
-            ViewBag.Toppings = Toppings;
-            ViewBag.ToppingImages = ToppingImages;
-
             return View();
         }
 
@@ -121,17 +102,6 @@ namespace PizzaStore.Controllers
                 {//All other pizzas have crust1
                     pizza.IsGlutenFree = false;
                     pizza.ImagePath = "crust1.png";
-                }
-
-                /*
-                 * Code is not co-operating, use this for diagnostics and delete it later on
-                 * 
-                 * Problem: int[] array being passed is empty. 
-                 */
-
-                foreach (Topping topping in pizza.Toppings)
-                {
-                    System.Diagnostics.Debug.WriteLine(topping.Name);
                 }
 
                 _context.Add(pizza);
