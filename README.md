@@ -14,4 +14,4 @@ SliceOfHeaven is an ASP.NET MVC project that I created. Originally a class proje
 
 ## Demonstration
 
-Explore a hosted version of SliceOfHeaven [here]()
+Hosted version coming soon!
