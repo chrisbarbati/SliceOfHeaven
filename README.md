@@ -4,14 +4,14 @@ SliceOfHeaven is an ASP.NET MVC project that I created. Originally a class proje
 
 ## Notable Features
 
-- User Authentication: Secure registration and login system.
-
-- Role-based Authorization: Different access levels based on user roles.
-
-- Stripe API Payment Integration: Seamless payment processing using the Stripe API.
-
 - Fully Functional Ordering System: Customize pizzas with various toppings before checkout.
+
+- User Authentication: Secure registration and login system. Login with Google via API.
+
+- Role-based Authorization: Different access levels based on user roles. Customers can create a new pizza. Admin users can add new topping options, view customer orders, etc. 
+
+- Stripe API Payment Integration: Seamless payment processing using the Stripe API. Currently in test mode, so feel free to try it out.
 
 ## Demonstration
 
-Hosted version coming soon!
+Check out a hosted version at [https://sliceofheaven2.azurewebsites.net/](https://sliceofheaven2.azurewebsites.net/) Azure's free hosting speed leaves something to be desired, but it still serves as a fully functional demonstration. Feel free to create a user account of your own or to use `test@test.ca` with password `Test123!`
