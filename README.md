@@ -1,6 +1,6 @@
 # SliceOfHeaven ASP.NET MVC Project
 
-SliceOfHeaven is an ASP.NET MVC project that I created. Originally a class project, the goal was to create a functional pizza-store website, demonstrating my abilities in ASP.NET.
+SliceOfHeaven is an ASP.NET MVC project that I created. Originally a class project to create an e-commerce page, my goal was to create a functional pizza-store website, demonstrating my abilities in ASP.NET.
 
 ## Notable Features
 
@@ -14,4 +14,5 @@ SliceOfHeaven is an ASP.NET MVC project that I created. Originally a class proje
 
 ## Demonstration
 
-Hosted version coming soon!
+Check out a hosted version at [https://sliceofheaven2.azurewebsites.net/](https://sliceofheaven2.azurewebsites.net/) Azure's free hosting speed leaves something to be desired, but it still serves as a fully functional demonstration. Feel free to create a user account of your own or to use `test@test.ca` with password `Test123!`
+
