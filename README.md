@@ -14,4 +14,4 @@ SliceOfHeaven is an ASP.NET MVC project that I created. Originally a class proje
 
 ## Demonstration
 
-Check out a hosted version at [https://sliceofheaven2.azurewebsites.net/](https://sliceofheaven2.azurewebsites.net/) Azure's free hosting speed leaves something to be desired, but it still serves as a fully functional demonstration. Feel free to create a user account of your own or to use `test@test.ca` with password `Test123!`
+Hosted version coming soon!
